@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/FPT_Teaching.iml" filepath="$PROJECT_DIR$/FPT_Teaching.iml" />
+      <module fileurl="file://$PROJECT_DIR$/uebungeins/uebungeins.iml" filepath="$PROJECT_DIR$/uebungeins/uebungeins.iml" />
+    </modules>
+  </component>
+</project>

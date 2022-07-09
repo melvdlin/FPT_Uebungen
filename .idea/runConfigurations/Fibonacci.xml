@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Fibonacci" type="Application" factoryName="Application" folderName="uebungeins">
+    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebungeins.Fibonacci" />
+    <module name="uebungeins" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
