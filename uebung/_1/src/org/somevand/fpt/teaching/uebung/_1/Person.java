@@ -1,4 +1,4 @@
-package org.somevand.fpt.teaching.uebungeins;
+package org.somevand.fpt.teaching.uebung._1;
 
 public class Person {
     private final int age;

@@ -1,4 +1,4 @@
-package org.somevand.fpt.teaching.uebungeins;
+package org.somevand.fpt.teaching.uebung._1;
 
 public class Fibonacci {
     public static long fibLinear(long index) {

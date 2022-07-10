@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FPT_Teaching.iml" filepath="$PROJECT_DIR$/FPT_Teaching.iml" />
-      <module fileurl="file://$PROJECT_DIR$/uebungeins/uebungeins.iml" filepath="$PROJECT_DIR$/uebungeins/uebungeins.iml" />
+      <module fileurl="file://$PROJECT_DIR$/uebung/_1/_1.iml" filepath="$PROJECT_DIR$/uebung/_1/_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/uebung/_2/_2.iml" filepath="$PROJECT_DIR$/uebung/_2/_2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/uebung/_3/_3.iml" filepath="$PROJECT_DIR$/uebung/_3/_3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/uebung/uebung.iml" filepath="$PROJECT_DIR$/uebung/uebung.iml" />
     </modules>
   </component>
 </project>
