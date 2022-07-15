@@ -16,7 +16,7 @@ public class Watermelon extends Fruit {
     public boolean equals(Object obj) {
         return
                 super.equals(obj) &&
-                (obj instanceof Watermelon other) &&
+                obj instanceof Watermelon other &&
                 waterContent == other.waterContent;
     }
 }
