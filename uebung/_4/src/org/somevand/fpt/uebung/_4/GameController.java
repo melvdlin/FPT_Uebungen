@@ -51,26 +51,9 @@ public class GameController {
 
     public boolean advance() {
         var playerInput = tui.getInputln(UIStrings.gameActionPrompt);
-        var exiting = processPlayerInput(playerInput);
-        if (state.getPlayer().getBalance() >= state.getWinBalance()) {
-            tui.println("You retire.");
-            return false;
-        } else {
-            return exiting;
-        }
-    }
+        var exit = false;
 
-    public void run() {
-        if (state == null) throw new IllegalStateException();   // TODO : implement save loading
-        tui.setState(state);
-        tui.update();
-        while (advance());
-    }
-
-    private boolean processPlayerInput(String input)
-            throws IllegalArgumentException {
-
-        var tokens = Arrays.asList(input.split(" +"));
+        var tokens = Arrays.asList(playerInput.split(" +"));
 
         try {
             if (tokens.size() == 1 && tokens.get(0).equalsIgnoreCase(UIStrings.gameActionExit)) {
@@ -126,6 +109,19 @@ public class GameController {
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
             tui.println("loading from / saving to file failed");
         }
-        return true;
+
+        if (state.getPlayer().getBalance() >= state.getWinBalance()) {
+            tui.println("You retire.");
+            exit = true;
+        }
+
+        return exit;
+    }
+
+    public void run() {
+        if (state == null) throw new IllegalStateException();
+        tui.setState(state);
+        tui.update();
+        while (advance());
     }
 }
