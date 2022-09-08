@@ -1,15 +1,16 @@
-package org.somevand.fpt.uebung._4.data.base;
+package org.somevand.fpt.uebung._4.data.basic;
 
 import org.somevand.fpt.uebung._4.data.Ware;
 import org.somevand.fpt.uebung._4.exceptions.OutOfWareException;
 import org.somevand.fpt.uebung._4.exceptions.UnknownWareException;
 import org.somevand.fpt.uebung._4.tui.DisplayableMarket;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class Market implements DisplayableMarket {
+public class Market implements DisplayableMarket, Serializable {
     private final String name;
     private final Map<Ware, Integer> priceMultipliers;
     private final Map<Ware, Integer> inventory;
@@ -54,24 +55,44 @@ public class Market implements DisplayableMarket {
     }
 
     public void buy(Ware ware, int count)
-            throws UnknownWareException {
-        checkCanBuy(ware);
+            throws UnknownWareException, IllegalArgumentException {
+        checkCanBuy(ware, count);
         inventory.replace(ware, inventory.get(ware) + count);
     }
 
     public void sell(Ware ware, int count)
-            throws UnknownWareException, OutOfWareException {
+            throws UnknownWareException, OutOfWareException, IllegalArgumentException {
         checkCanSell(ware, count);
         inventory.replace(ware, inventory.get(ware) - count);
     }
 
-    private void checkCanBuy(Ware ware)
-            throws UnknownWareException {
+    public boolean canBuy(Ware ware, int count) {
+        try {
+            checkCanBuy(ware, count);
+            return true;
+        } catch (UnknownWareException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public boolean canSell(Ware ware, int count) {
+        try {
+            checkCanSell(ware, count);
+            return true;
+        } catch (UnknownWareException | OutOfWareException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public void checkCanBuy(Ware ware, int count)
+            throws UnknownWareException, IllegalArgumentException {
+        if (count < 0) throw new IllegalArgumentException("count must not be negative");
         if (!inventory.containsKey(ware)) throw new UnknownWareException(ware);
     }
 
-    private void checkCanSell(Ware ware, int count)
-            throws UnknownWareException, OutOfWareException {
+    public void checkCanSell(Ware ware, int count)
+            throws UnknownWareException, OutOfWareException, IllegalArgumentException {
+        if (count < 0) throw new IllegalArgumentException("count must not be negative");
         if (!inventory.containsKey(ware)) throw new UnknownWareException(ware);
         if (inventory.get(ware) < count) throw new OutOfWareException(ware, count, inventory.get(ware));
     }

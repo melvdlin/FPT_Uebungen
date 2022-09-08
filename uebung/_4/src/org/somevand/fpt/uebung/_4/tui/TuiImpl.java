@@ -165,11 +165,11 @@ public class TuiImpl implements TUI {
     public void update() {
         StringBuilder builder = new StringBuilder();
         try {
-            appendMarketTitleString(builder);
-            appendInventoryString(builder, state.getCurrentMarket()::getLocalPrice, state.getCurrentMarket()::getCount);
+            appendMiscPlayerInfoString(builder);
             appendPlayerTitleString(builder);
             appendInventoryString(builder, state.getCurrentMarket()::getLocalPrice, state.getPlayer()::getCount);
-            appendMiscPlayerInfoString(builder);
+            appendMarketTitleString(builder);
+            appendInventoryString(builder, state.getCurrentMarket()::getLocalPrice, state.getCurrentMarket()::getCount);
             appendTravelInfoTitleString(builder);
             appendTravelInfoChartString(builder);
             appendHorizontalSeparatorString(builder);
@@ -185,7 +185,7 @@ public class TuiImpl implements TUI {
         ).append(
                 StringHelper.frame(
                         StringHelper.center(
-                                StringHelper.fMarketInventoryTitleRow.formatted(
+                                StringHelper.fMarketInventoryTitleRow.toLowerCase().formatted(
                                         state.getCurrentMarket().getName()
                                 ), StringHelper.totalInnerWidth
                         )

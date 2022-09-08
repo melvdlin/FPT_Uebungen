@@ -1,9 +1,10 @@
 package org.somevand.fpt.uebung._4;
 
 import org.somevand.fpt.uebung._4.data.Ware;
-import org.somevand.fpt.uebung._4.data.base.GameState;
-import org.somevand.fpt.uebung._4.data.base.Market;
-import org.somevand.fpt.uebung._4.data.base.Player;
+import org.somevand.fpt.uebung._4.data.basic.GameState;
+import org.somevand.fpt.uebung._4.data.basic.Market;
+import org.somevand.fpt.uebung._4.data.basic.Player;
+import org.somevand.fpt.uebung._4.data.serde.BinarySerde;
 
 import java.util.List;
 import java.util.Map;
@@ -51,8 +52,8 @@ public class Main {
 
         Player player = new Player(30, 200, wares);
 
-        GameState gameState = new GameState(wares, mdm, player, dinslaken);
-        GameController controller = new GameController(gameState);
+        GameState gameState = new GameState(wares, mdm, player, dinslaken, 1000);
+        GameController controller = new GameController(new BinarySerde<>(), gameState);
         controller.run();
     }
 }

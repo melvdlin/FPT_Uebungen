@@ -1,4 +1,4 @@
-package org.somevand.fpt.uebung._4.data.base;
+package org.somevand.fpt.uebung._4.data.basic;
 
 import org.somevand.fpt.uebung._4.data.Ware;
 import org.somevand.fpt.uebung._4.exceptions.*;
@@ -65,34 +65,64 @@ public class Player implements DisplayablePlayer, Serializable {
         }
     }
 
-    private void buy(Ware ware, int count, int priceMultiplier)
-            throws CannotAffordException, UnknownWareException, OutOfCapacityException {
+    public void buy(Ware ware, int count, int priceMultiplier)
+            throws CannotAffordException, UnknownWareException, OutOfCapacityException, IllegalArgumentException {
         checkCanBuy(ware, count, priceMultiplier);
         balance -= ware.basePrice() * count * priceMultiplier;
         inventory.replace(ware, inventory.get(ware) + count);
     }
 
-    private void sell(Ware ware, int count, int priceMultiplier)
-            throws OutOfWareException, UnknownWareException {
+    public void sell(Ware ware, int count, int priceMultiplier)
+            throws OutOfWareException, UnknownWareException, IllegalArgumentException {
         checkCanSell(ware, count);
         balance += ware.basePrice() * count * priceMultiplier;
         inventory.replace(ware, inventory.get(ware) - count);
     }
 
-    private void checkCanTravel(int distance)
-            throws OutOfFuelException {
+    public boolean canTravel(int distance) {
+        try {
+            checkCanTravel(distance);
+            return true;
+        } catch (OutOfFuelException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public boolean canBuy(Ware ware, int count, int priceMultiplier) {
+        try {
+            checkCanBuy(ware, count, priceMultiplier);
+            return true;
+        } catch (UnknownWareException | CannotAffordException | OutOfCapacityException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public boolean canSell(Ware ware, int count) {
+        try {
+            checkCanSell(ware, count);
+            return true;
+        } catch (OutOfWareException | UnknownWareException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public void checkCanTravel(int distance)
+            throws OutOfFuelException, IllegalArgumentException {
+        if (distance < 0) throw new IllegalArgumentException("distance must not be negative");
         if (getFuelReach() < distance) throw new OutOfFuelException(distance, getFuelReach());
     }
 
-    private void checkCanBuy(Ware ware, int count, int priceMultiplier)
-            throws UnknownWareException, CannotAffordException, OutOfCapacityException {
+    public void checkCanBuy(Ware ware, int count, int priceMultiplier)
+            throws UnknownWareException, CannotAffordException, OutOfCapacityException, IllegalArgumentException {
+        if (count < 0) throw new IllegalArgumentException("count must not be negative");
         if (!inventory.containsKey(ware)) throw new UnknownWareException(ware);
         if (balance < ware.basePrice() * count * priceMultiplier) throw new CannotAffordException(ware, count, priceMultiplier, balance);
         if (getRemainingCapacity() < ware.size() * count) throw new OutOfCapacityException(ware, count, getRemainingCapacity());
     }
 
-    private void checkCanSell (Ware ware, int count)
-            throws UnknownWareException, OutOfWareException {
+    public void checkCanSell (Ware ware, int count)
+            throws UnknownWareException, OutOfWareException, IllegalArgumentException {
+        if (count < 0) throw new IllegalArgumentException("count must not be negative");
         if (!inventory.containsKey(ware)) throw new UnknownWareException(ware);
         if (inventory.get(ware) < count) throw new OutOfWareException(ware, count, inventory.get(ware));
     }
