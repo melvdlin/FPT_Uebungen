@@ -1,6 +1,6 @@
 package org.somevand.fpt.uebung._4.exceptions;
 
-import org.somevand.fpt.uebung._4.Ware;
+import org.somevand.fpt.uebung._4.data.Ware;
 
 public class OutOfCapacityException extends GameException {
     private final Ware ware;
