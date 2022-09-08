@@ -19,11 +19,15 @@ public class GameController {
     }
 
     public boolean advance() {
-        // TODO: implement
+        tui.update();
+
         return false;
     }
 
     public void run() {
+        if (state == null) throw new IllegalStateException();   // TODO : implement save loading
+        tui.setState(state);
+
         while (advance());
     }
 }

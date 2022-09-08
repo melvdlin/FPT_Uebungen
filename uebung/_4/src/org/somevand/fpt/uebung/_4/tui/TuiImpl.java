@@ -9,17 +9,21 @@ import java.util.Scanner;
 public class TuiImpl implements TUI {
 
     private static final class StringHelper {
-        public static final int nameColWidth = 30;
-        public static final int priceColWidth = 15;
-        public static final int sizeColWidth = 15;
-        public static final int countColWidth = 15;
-        public static final int balanceWidth = 15;
-        public static final int fuelWidth = 15;
-        public static final int destinationColWidth = 30;
-        public static final int distanceColWidth = 15;
+        public static final int genericStringColWidth = 30;
+        public static final int genericIntColWidth = 20;
+        public static final int nameColWidth = genericStringColWidth;
+        public static final int priceColWidth = genericIntColWidth;
+        public static final int sizeColWidth = genericIntColWidth;
+        public static final int countColWidth = genericIntColWidth;
+        public static final int balanceWidth = genericIntColWidth;
+        public static final int fuelWidth = genericIntColWidth;
+        public static final int destinationColWidth = genericStringColWidth;
+        public static final int distanceColWidth = genericIntColWidth;
 
         public static final int totalInnerWidth = nameColWidth + 1 + priceColWidth + 1 + sizeColWidth + 1 + countColWidth;
         public static final int totalOuterWidth = totalInnerWidth + 4;
+
+        public static final int totalMiscPlayerInfoWidth = genericStringColWidth + 1 + genericIntColWidth;
 
         public static final char horizontalSeparator = '-';
         public static final char verticalSeparator = '|';
@@ -45,32 +49,38 @@ public class TuiImpl implements TUI {
 
         public static final String fInventoryTopRow =
                 "%-" + nameColWidth + "." + nameColWidth + "s" + " " +
-                "%-" + priceColWidth + "." + priceColWidth + "s" + " " +
-                "%-" + sizeColWidth + "." + sizeColWidth + "s" + " " +
-                "%-" + countColWidth + "." + countColWidth + "s";
+                "%" + priceColWidth + "." + priceColWidth + "s" + " " +
+                "%" + sizeColWidth + "." + sizeColWidth + "s" + " " +
+                "%" + countColWidth + "." + countColWidth + "s";
 
         public static final String fInventoryRow =
                 "%-" + nameColWidth + "." + nameColWidth + "s" + " " +
-                "%" + priceColWidth + "." + priceColWidth + "d" + " " +
-                "%" + sizeColWidth + "." + sizeColWidth + "d" + " " +
-                "%" + countColWidth + "." + countColWidth + "d";
+                "%" + priceColWidth + "d" + " " +
+                "%" + sizeColWidth + "d" + " " +
+                "%" + countColWidth + "d";
 
-        public static final String fCapacityRow =
-                tagCapacity + ": %d/%d";
+        public static final String fCapacityRowL =
+                tagCapacity + ":";
+        public static final String getfCapacityRowR =
+                 "%d/%d";
 
-        public static final String fBalanceRow =
-                tagBalance + ": %" + balanceWidth + "." + balanceWidth + "d" + tagCurrency;
+        public static final String fBalanceRowL =
+                tagBalance + ":";
+        public static final String fBalanceRowR =
+                "%" + balanceWidth + "d" + tagCurrency;
 
-        public static final String fFuelRow =
-                tagFuel + ": %" + fuelWidth + "." + fuelWidth + "d";
+        public static final String fFuelRowL =
+                tagFuel + ":";
+        public static final String fFuelRowR =
+                "%" + fuelWidth + "d";
 
         public static final String fTravelInfoTopRow =
                 "%-" + destinationColWidth + "." + destinationColWidth + "s" + " " +
-                "%-" + distanceColWidth + "." + destinationColWidth + "s";
+                "%" + distanceColWidth + "." + destinationColWidth + "s";
 
         public static final String fTravelInfoRow =
                 "%-" + destinationColWidth + "." + destinationColWidth + "s" + " " +
-                "%" + distanceColWidth + "." + destinationColWidth + "d";
+                "%" + distanceColWidth + "d";
 
         public static final String horizontalSeparatorString =
                 cornerChar + String.valueOf(horizontalSeparator).repeat(totalOuterWidth - 2) + cornerChar;
@@ -240,26 +250,36 @@ public class TuiImpl implements TUI {
         builder.append(StringHelper.horizontalSeparatorString).append('\n'
         ).append(
                 StringHelper.frame(
-                        StringHelper.fBalanceRow.formatted(
-                                state.getPlayer().getBalance()
+                        StringHelper.alignLeftRight(
+                                StringHelper.fBalanceRowL.formatted(),
+                                StringHelper.fBalanceRowR.formatted(
+                                        state.getPlayer().getBalance()
+                                ), StringHelper.totalMiscPlayerInfoWidth + StringHelper.tagCurrency.length()
                         )
                 )
         ).append('\n'
         ).append(
                 StringHelper.frame(
-                        StringHelper.fCapacityRow.formatted(
-                                state.getPlayer().getRemainingCapacity(),
-                                state.getPlayer().getMaxCapacity()
+                        StringHelper.alignLeftRight(
+                                StringHelper.fCapacityRowL.formatted(),
+                                StringHelper.getfCapacityRowR.formatted(
+                                        state.getPlayer().getRemainingCapacity(),
+                                        state.getPlayer().getMaxCapacity()
+                                ), StringHelper.totalMiscPlayerInfoWidth
                         )
+
                 )
         ).append('\n'
         ).append(
                 StringHelper.frame(
-                        StringHelper.fFuelRow.formatted(
-                                state.getPlayer().getFuelReach()
+                        StringHelper.alignLeftRight(
+                                StringHelper.fFuelRowL.formatted(),
+                                StringHelper.fFuelRowR.formatted(
+                                        state.getPlayer().getFuelReach()
+                                ), StringHelper.totalMiscPlayerInfoWidth
                         )
                 )
-        );
+        ).append('\n');
     }
 
     private void appendTravelInfoChartString(StringBuilder builder)
