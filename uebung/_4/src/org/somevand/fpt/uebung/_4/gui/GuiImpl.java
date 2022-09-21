@@ -1,9 +1,8 @@
 package org.somevand.fpt.uebung._4.gui;
 
 import javafx.application.Application;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.collections.ObservableList;
+import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -12,8 +11,11 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.somevand.fpt.uebung._4.data.Ware;
 
+import java.util.Map;
+
 public class GuiImpl extends Application implements GUI {
 
+    //region Constants
     private static final double SPACING = 10.0;
     private static final String TAG_BALANCE                 = "Balance:";
     private static final String TAG_CARGOSPACE              = "Available Cargo Space:";
@@ -28,14 +30,16 @@ public class GuiImpl extends Application implements GUI {
     private static final String TAG_COLUMN_COUNT            = "Count Available";
     private static final String TAG_MARKETINVENTORY         = "Market Inventory";
     private static final String TAG_PLAYERINVENTORY         = "Player Inventory";
+    //endregion
 
     private static GuiImpl instance = null;
 
     private Stage primaryStage = null;
     private Scene primaryScene = null;
 
+    //region Nodes
     private AnchorPane baseAnchorPane                                           = new AnchorPane();
-        private HBox baseHBox                                                       = new HBox(SPACING);
+        private SplitPane baseSplitPane                                             = new SplitPane();
             private VBox leftVBox                                                       = new VBox(SPACING);
                 private Canvas marketMapCanvas                                              = new Canvas();
                 private GridPane miscInfoGridPane                                           = new GridPane();
@@ -65,11 +69,22 @@ public class GuiImpl extends Application implements GUI {
                     private TableColumn<InventoryEntry, Number> playerPriceTableColumn          = new TableColumn<>(TAG_COLUMN_PRICE);
                     private TableColumn<InventoryEntry, Number> playerSizeTableColumn           = new TableColumn<>(TAG_COLUMN_SIZE);
                     private TableColumn<InventoryEntry, Number> playerCountTableColumn          = new TableColumn<>(TAG_COLUMN_COUNT);
+    //endregion
+
+    //region Displayed Data
+    private ObservableList<InventoryEntry> playerInventoryList;
+    private ObservableList<InventoryEntry> marketInventoryList;
+    private Map<Ware, InventoryEntry> playerInventoryEntryMap;
+    private Map<Ware, InventoryEntry> marketInventoryEntryMap;
+    //endregion
 
     public static GuiImpl getInstance() {
         return instance;
     }
 
+    public static void launch() {
+        Application.launch();
+    }
     @Override
     public void init() {
         instance = this;
@@ -87,8 +102,8 @@ public class GuiImpl extends Application implements GUI {
         this.primaryScene = new Scene(baseAnchorPane);
         this.primaryStage.setScene(primaryScene);
 
-        baseAnchorPane.getChildren().add(baseHBox);
-            baseHBox.getChildren().add(leftVBox);
+        baseAnchorPane.getChildren().add(baseSplitPane);
+            baseSplitPane.getItems().add(leftVBox);
                 leftVBox.getChildren().add(marketMapCanvas);
                 leftVBox.getChildren().add(miscInfoGridPane);
                     miscInfoGridPane.add(balanceTagLabel, 0, 0);
@@ -103,7 +118,8 @@ public class GuiImpl extends Application implements GUI {
                         serdeButtonHBox.getChildren().add(saveButton);
                         serdeButtonHBox.getChildren().add(loadButton);
                         serdeButtonHBox.getChildren().add(exitButton);
-        baseHBox.getChildren().add(rightVBox);
+//        baseHBox.getChildren().add(rightVBox);
+        baseSplitPane.getItems().add(rightVBox);
             rightVBox.getChildren().add(marketLabel);
             rightVBox.getChildren().add(marketInventoryTableView);
                 marketInventoryTableView.getColumns().add(marketNameTableColumn);
@@ -113,15 +129,17 @@ public class GuiImpl extends Application implements GUI {
             rightVBox.getChildren().add(marketPlayerSpacerRegion);
             rightVBox.getChildren().add(playerLabel);
             rightVBox.getChildren().add(playerInventoryTableView);
-                playerInventoryTableView.getColumns().add(playerNameTableColumn);
-                playerInventoryTableView.getColumns().add(playerPriceTableColumn);
-                playerInventoryTableView.getColumns().add(playerSizeTableColumn);
-                playerInventoryTableView.getColumns().add(playerCountTableColumn);
+                playerInventoryTableView.getColumns().add(marketNameTableColumn);
+                playerInventoryTableView.getColumns().add(marketPriceTableColumn);
+                playerInventoryTableView.getColumns().add(marketSizeTableColumn);
+                playerInventoryTableView.getColumns().add(marketCountTableColumn);
 
-        AnchorPane.setBottomAnchor(baseHBox, SPACING);
-        AnchorPane.setLeftAnchor(baseHBox, SPACING);
-        AnchorPane.setRightAnchor(baseHBox, SPACING);
-        AnchorPane.setTopAnchor(baseHBox, SPACING);
+        AnchorPane.setBottomAnchor(baseSplitPane, SPACING);
+        AnchorPane.setLeftAnchor(baseSplitPane, SPACING);
+        AnchorPane.setRightAnchor(baseSplitPane, SPACING);
+        AnchorPane.setTopAnchor(baseSplitPane, SPACING);
+
+        baseSplitPane.setOrientation(Orientation.HORIZONTAL);
 
         HBox.setHgrow(leftVBox, Priority.SOMETIMES);
         HBox.setHgrow(rightVBox, Priority.SOMETIMES);
