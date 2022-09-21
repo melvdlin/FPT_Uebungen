@@ -5,10 +5,9 @@ import org.somevand.fpt.uebung._4.data.Ware;
 
 import java.util.List;
 
-public interface GuidDIsplayableGameState {
+public interface GuiDisplayableGameState {
     GuiDisplayablePlayer getPlayer();
     List<? extends GuiDisplayableMarket> getMarkets();
-    List<Ware> getWares();
     int getDistance(GuiDisplayableMarket from, GuiDisplayableMarket to);
     ObservableValue<? extends GuiDisplayableMarket> getCurrentMarket();
 }

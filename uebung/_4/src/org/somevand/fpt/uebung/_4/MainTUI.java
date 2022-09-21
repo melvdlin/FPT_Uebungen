@@ -9,7 +9,7 @@ import org.somevand.fpt.uebung._4.data.serde.BinarySerde;
 import java.util.List;
 import java.util.Map;
 
-public class Main {
+public class MainTUI {
 
     public static void main(String[] args) {
         Ware petrol = new Ware("Petrol", 5, 1, true);
