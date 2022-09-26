@@ -1,13 +1,14 @@
 package org.somevand.fpt.uebung._4.gui;
 
 import javafx.beans.value.ObservableValue;
+import org.somevand.fpt.uebung._4.exceptions.UnknownMarketException;
 
 import java.util.List;
 
 public interface GuiDisplayableGameState {
     GuiDisplayablePlayer getPlayer();
     List<? extends GuiDisplayableMarket> getMarkets();
-    int getDistance(GuiDisplayableMarket from, GuiDisplayableMarket to);
+    int getDistance(GuiDisplayableMarket from, GuiDisplayableMarket to) throws UnknownMarketException;
     ObservableValue<? extends GuiDisplayableMarket> getCurrentMarket();
     int getWinBalance();
 }

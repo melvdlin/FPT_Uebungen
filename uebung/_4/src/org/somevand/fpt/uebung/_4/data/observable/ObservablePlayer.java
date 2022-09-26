@@ -1,31 +1,32 @@
 package org.somevand.fpt.uebung._4.data.observable;
 
-import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import org.somevand.fpt.uebung._4.data.Ware;
+import org.somevand.fpt.uebung._4.data.serde.records.PlayerData;
 import org.somevand.fpt.uebung._4.exceptions.*;
 import org.somevand.fpt.uebung._4.gui.GuiDisplayablePlayer;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
 public class ObservablePlayer implements GuiDisplayablePlayer, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final ObservableMap<Ware, Integer> inventory = FXCollections.observableHashMap();
     private int maxCapacity;
-    private final SimpleIntegerProperty remainingCapacity = new SimpleIntegerProperty(0);
+    private final IntegerBinding remainingCapacity = Bindings.createIntegerBinding(this::calculateRemainingCapacity, inventory);
     private final SimpleIntegerProperty balance = new SimpleIntegerProperty(0);
-    private final SimpleIntegerProperty fuelReach = new SimpleIntegerProperty(0);
+    private final IntegerBinding fuelReach = Bindings.createIntegerBinding(this::calculateFuelReach, inventory);
 
     private ObservablePlayer() {
-        inventory.addListener((MapChangeListener<? super Ware, ? super Integer>) change -> {
-            remainingCapacity.set(calculateRemainingCapacity());
-            if (change.getKey().isFuel()) fuelReach.set(calculateFuelReach());
-        });
+
     }
 
     private ObservablePlayer(int maxCapacity, int balance) {
@@ -44,6 +45,31 @@ public class ObservablePlayer implements GuiDisplayablePlayer, Serializable {
         this.inventory.putAll(inventory);
     }
 
+    public ObservablePlayer(PlayerData data) {
+        initFromData(data);
+    }
+
+    private void initFromData(PlayerData data) {
+        this.inventory.putAll(data.inventory());
+        this.maxCapacity = data.maxCapacity();
+        this.balance.set(data.balance());
+    }
+
+    public PlayerData getData() {
+        return new PlayerData(Map.copyOf(inventory), maxCapacity, balance.get());
+    }
+
+    @Serial
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.writeObject(getData());
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, ClassCastException, IOException {
+        initFromData((PlayerData) ois.readObject());
+    }
+
+
     public int getCount(Ware ware) throws UnknownWareException {
         if (!inventory.containsKey(ware))
             throw new UnknownWareException(ware);
@@ -56,12 +82,12 @@ public class ObservablePlayer implements GuiDisplayablePlayer, Serializable {
     }
 
     @Override
-    public ReadOnlyIntegerProperty getBalance() {
+    public ObservableValue<Number> getBalance() {
         return balance;
     }
 
     @Override
-    public ReadOnlyIntegerProperty getFuelReach() {
+    public ObservableValue<Number> getFuelReach() {
         return fuelReach;
     }
 
@@ -71,7 +97,7 @@ public class ObservablePlayer implements GuiDisplayablePlayer, Serializable {
     }
 
     @Override
-    public ReadOnlyIntegerProperty getRemainingCapacity() {
+    public ObservableValue<Number> getRemainingCapacity() {
         return remainingCapacity;
     }
 
@@ -130,27 +156,35 @@ public class ObservablePlayer implements GuiDisplayablePlayer, Serializable {
 
     public void checkCanTravel(int distance)
             throws OutOfFuelException, IllegalArgumentException {
-        if (distance < 0) throw new IllegalArgumentException("distance must not be negative");
-        if (getFuelReach().get() < distance) throw new OutOfFuelException(distance, getFuelReach().get());
+        if (distance < 0)
+            throw new IllegalArgumentException("distance must not be negative");
+        if (getFuelReach().getValue().intValue() < distance)
+            throw new OutOfFuelException(distance, getFuelReach().getValue().intValue());
     }
 
     public void checkCanBuy(Ware ware, int count, int priceMultiplier)
             throws UnknownWareException, CannotAffordException, OutOfCapacityException, IllegalArgumentException {
-        if (count < 0) throw new IllegalArgumentException("count must not be negative");
-        if (!inventory.containsKey(ware)) throw new UnknownWareException(ware);
-        if (balance.get() < ware.basePrice() * count * priceMultiplier) throw new CannotAffordException(ware, count, priceMultiplier, balance.get());
-        if (getRemainingCapacity().get() < ware.size() * count) throw new OutOfCapacityException(ware, count, getRemainingCapacity().get());
+        if (count < 0)
+            throw new IllegalArgumentException("count must not be negative");
+        if (!inventory.containsKey(ware))
+            throw new UnknownWareException(ware);
+        if (balance.get() < ware.basePrice() * count * priceMultiplier)
+            throw new CannotAffordException(ware, count, priceMultiplier, balance.get());
+        if (getRemainingCapacity().getValue().intValue() < ware.size() * count)
+            throw new OutOfCapacityException(ware, count, getRemainingCapacity().getValue().intValue());
     }
 
     public void checkCanSell (Ware ware, int count)
             throws UnknownWareException, OutOfWareException, IllegalArgumentException {
         if (count < 0) throw new IllegalArgumentException("count must not be negative");
-        if (!inventory.containsKey(ware)) throw new UnknownWareException(ware);
-        if (inventory.get(ware) < count) throw new OutOfWareException(ware, count, inventory.get(ware));
+        if (!inventory.containsKey(ware))
+            throw new UnknownWareException(ware);
+        if (inventory.get(ware) < count)
+            throw new OutOfWareException(ware, count, inventory.get(ware));
     }
 
     private int calculateRemainingCapacity() {
-        return inventory
+        return maxCapacity - inventory
                 .entrySet()
                 .stream()
                 .mapToInt(value -> value.getKey().size() * value.getValue())

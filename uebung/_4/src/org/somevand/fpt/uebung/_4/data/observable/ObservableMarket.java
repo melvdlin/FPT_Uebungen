@@ -3,18 +3,21 @@ package org.somevand.fpt.uebung._4.data.observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import org.somevand.fpt.uebung._4.data.Ware;
+import org.somevand.fpt.uebung._4.data.serde.records.MarketData;
 import org.somevand.fpt.uebung._4.exceptions.OutOfWareException;
 import org.somevand.fpt.uebung._4.exceptions.UnknownWareException;
 import org.somevand.fpt.uebung._4.gui.GuiDisplayableMarket;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class ObservableMarket implements GuiDisplayableMarket, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    private String name;
+    private String name = "";
     private final Map<Ware, Integer> priceMultipliers = new HashMap<>();
     private final ObservableMap<Ware, Integer> inventory = FXCollections.observableHashMap();
 
@@ -40,6 +43,30 @@ public class ObservableMarket implements GuiDisplayableMarket, Serializable {
         }
     }
 
+    public ObservableMarket(MarketData data) {
+        initFromData(data);
+    }
+
+    private void initFromData(MarketData data) {
+        this.name = data.name();
+        this.inventory.putAll(data.inventory());
+        this.priceMultipliers.putAll(data.priceMultipliers());
+    }
+
+    public MarketData getData() {
+        return new MarketData(name, Map.copyOf(inventory), Map.copyOf(priceMultipliers));
+    }
+
+    @Serial
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.writeObject(getData());
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        initFromData((MarketData) ois.readObject());
+    }
+
     @Override
     public String getName() {
         return name;
@@ -52,7 +79,8 @@ public class ObservableMarket implements GuiDisplayableMarket, Serializable {
 
     public int getPriceMultiplier(Ware ware)
             throws UnknownWareException {
-        if (!priceMultipliers.containsKey(ware)) throw new UnknownWareException(ware);
+        if (!priceMultipliers.containsKey(ware))
+            throw new UnknownWareException(ware);
         return priceMultipliers.get(ware);
     }
 
@@ -94,14 +122,19 @@ public class ObservableMarket implements GuiDisplayableMarket, Serializable {
 
     public void checkCanBuy(Ware ware, int count)
             throws UnknownWareException, IllegalArgumentException {
-        if (count < 0) throw new IllegalArgumentException("count must not be negative");
-        if (!inventory.containsKey(ware)) throw new UnknownWareException(ware);
+        if (count < 0)
+            throw new IllegalArgumentException("count must not be negative");
+        if (!inventory.containsKey(ware))
+            throw new UnknownWareException(ware);
     }
 
     public void checkCanSell(Ware ware, int count)
             throws UnknownWareException, OutOfWareException, IllegalArgumentException {
-        if (count < 0) throw new IllegalArgumentException("count must not be negative");
-        if (!inventory.containsKey(ware)) throw new UnknownWareException(ware);
-        if (inventory.get(ware) < count) throw new OutOfWareException(ware, count, inventory.get(ware));
+        if (count < 0)
+            throw new IllegalArgumentException("count must not be negative");
+        if (!inventory.containsKey(ware))
+            throw new UnknownWareException(ware);
+        if (inventory.get(ware) < count)
+            throw new OutOfWareException(ware, count, inventory.get(ware));
     }
 }

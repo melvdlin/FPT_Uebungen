@@ -23,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.somevand.fpt.uebung._4.data.Ware;
+import org.somevand.fpt.uebung._4.exceptions.UnknownMarketException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -652,83 +653,89 @@ public class GuiImpl extends Application implements GUI {
         //region market distances
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.setTextBaseline(VPos.TOP);
-        if (marketSW != null && marketNW != null)
-            gc.fillText(
-                    String.valueOf(gameState.getValue().getDistance(marketSW, marketNW)),
-                    MAP_COORD_SECONDARY_EDGEVAL_NEAR,
-                    MAP_COORD_PRIMARY_EDGEVAL_NEAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
-        if (marketSW != null && marketSE != null)
-            gc.fillText(
-                    String.valueOf(gameState.getValue().getDistance(marketSW, marketSE)),
-                    MAP_COORD_PRIMARY_EDGEVAL_FAR,
-                    MAP_COORD_SECONDARY_EDGEVAL_FAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
 
-        gc.setTextBaseline(VPos.BOTTOM);
-        if (marketNW != null && marketSW != null)
-            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketNW, marketSW)),
-                    MAP_COORD_SECONDARY_EDGEVAL_NEAR,
-                    MAP_COORD_PRIMARY_EDGEVAL_FAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
-        if (marketNW != null && marketNE != null)
-            gc.fillText(
-                    String.valueOf(gameState.getValue().getDistance(marketNW, marketNE)),
-                    MAP_COORD_PRIMARY_EDGEVAL_FAR,
-                    MAP_COORD_SECONDARY_EDGEVAL_NEAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
+        try {
+            if (marketSW != null && marketNW != null)
+                gc.fillText(
+                        String.valueOf(gameState.getValue().getDistance(marketSW, marketNW)),
+                        MAP_COORD_SECONDARY_EDGEVAL_NEAR,
+                        MAP_COORD_PRIMARY_EDGEVAL_NEAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+            if (marketSW != null && marketSE != null)
+                gc.fillText(
+                        String.valueOf(gameState.getValue().getDistance(marketSW, marketSE)),
+                        MAP_COORD_PRIMARY_EDGEVAL_FAR,
+                        MAP_COORD_SECONDARY_EDGEVAL_FAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
 
-        gc.setTextAlign(TextAlignment.LEFT);
-        gc.setTextBaseline(VPos.TOP);
-        if (marketSE != null && marketNE != null)
-            gc.fillText(String.valueOf(
-                    gameState.getValue().getDistance(marketSE, marketNE)),
-                    MAP_COORD_SECONDARY_EDGEVAL_FAR,
-                    MAP_COORD_PRIMARY_EDGEVAL_NEAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
-        if (marketSE != null && marketSW != null)
-            gc.fillText(String.valueOf(
-                    gameState.getValue().getDistance(marketSE, marketSW)),
-                    MAP_COORD_PRIMARY_EDGEVAL_NEAR,
-                    MAP_COORD_SECONDARY_EDGEVAL_FAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
-        gc.setTextBaseline(VPos.BOTTOM);
-        if (marketNE != null && marketSE != null)
-            gc.fillText(String.valueOf(
-                    gameState.getValue().getDistance(marketNE, marketSE)),
-                    MAP_COORD_SECONDARY_EDGEVAL_FAR,
-                    MAP_COORD_PRIMARY_EDGEVAL_FAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
-        if (marketNE != null && marketNW != null)
-            gc.fillText(String.valueOf(
-                    gameState.getValue().getDistance(marketNE, marketNW)),
-                    MAP_COORD_PRIMARY_EDGEVAL_NEAR,
-                    MAP_COORD_SECONDARY_EDGEVAL_NEAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
+            gc.setTextBaseline(VPos.BOTTOM);
+            if (marketNW != null && marketSW != null)
+                gc.fillText(
+                        String.valueOf(gameState.getValue().getDistance(marketNW, marketSW)),
+                        MAP_COORD_SECONDARY_EDGEVAL_NEAR,
+                        MAP_COORD_PRIMARY_EDGEVAL_FAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+            if (marketNW != null && marketNE != null)
+                gc.fillText(
+                        String.valueOf(gameState.getValue().getDistance(marketNW, marketNE)),
+                        MAP_COORD_PRIMARY_EDGEVAL_FAR,
+                        MAP_COORD_SECONDARY_EDGEVAL_NEAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
 
-        gc.setTextBaseline(VPos.CENTER);
-        gc.setTextAlign(TextAlignment.LEFT);
-        if (marketSE != null && marketNW != null)
-            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketSE, marketNW)),
-                    MAP_COORD_X_EDGEVAL_DIAG_NEAR,
-                    MAP_COORD_Y_EDGEVAL_DIAG_NEAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
-        if (marketNE != null && marketSW != null)
-            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketNE, marketSW)),
-                    MAP_COORD_X_EDGEVAL_DIAG_NEAR,
-                    MAP_COORD_Y_EDGEVAL_DIAG_FAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
-        gc.setTextAlign(TextAlignment.RIGHT);
-        if (marketSW != null && marketNE != null)
-            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketSW, marketNE)),
-                    MAP_COORD_X_EDGEVAL_DIAG_FAR,
-                    MAP_COORD_Y_EDGEVAL_DIAG_NEAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
-        if (marketNW != null && marketSE != null)
-            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketNW, marketSE)),
-                    MAP_COORD_X_EDGEVAL_DIAG_FAR,
-                    MAP_COORD_Y_EDGEVAL_DIAG_FAR,
-                    MAP_MARKET_NAME_MAX_WIDTH);
+            gc.setTextAlign(TextAlignment.LEFT);
+            gc.setTextBaseline(VPos.TOP);
+            if (marketSE != null && marketNE != null)
+                gc.fillText(String.valueOf(
+                        gameState.getValue().getDistance(marketSE, marketNE)),
+                        MAP_COORD_SECONDARY_EDGEVAL_FAR,
+                        MAP_COORD_PRIMARY_EDGEVAL_NEAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+            if (marketSE != null && marketSW != null)
+                gc.fillText(String.valueOf(
+                        gameState.getValue().getDistance(marketSE, marketSW)),
+                        MAP_COORD_PRIMARY_EDGEVAL_NEAR,
+                        MAP_COORD_SECONDARY_EDGEVAL_FAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+            gc.setTextBaseline(VPos.BOTTOM);
+            if (marketNE != null && marketSE != null)
+                gc.fillText(String.valueOf(
+                        gameState.getValue().getDistance(marketNE, marketSE)),
+                        MAP_COORD_SECONDARY_EDGEVAL_FAR,
+                        MAP_COORD_PRIMARY_EDGEVAL_FAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+            if (marketNE != null && marketNW != null)
+                gc.fillText(String.valueOf(
+                        gameState.getValue().getDistance(marketNE, marketNW)),
+                        MAP_COORD_PRIMARY_EDGEVAL_NEAR,
+                        MAP_COORD_SECONDARY_EDGEVAL_NEAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+
+            gc.setTextBaseline(VPos.CENTER);
+            gc.setTextAlign(TextAlignment.LEFT);
+            if (marketSE != null && marketNW != null)
+                gc.fillText(String.valueOf(gameState.getValue().getDistance(marketSE, marketNW)),
+                        MAP_COORD_X_EDGEVAL_DIAG_NEAR,
+                        MAP_COORD_Y_EDGEVAL_DIAG_NEAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+            if (marketNE != null && marketSW != null)
+                gc.fillText(String.valueOf(gameState.getValue().getDistance(marketNE, marketSW)),
+                        MAP_COORD_X_EDGEVAL_DIAG_NEAR,
+                        MAP_COORD_Y_EDGEVAL_DIAG_FAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+            gc.setTextAlign(TextAlignment.RIGHT);
+            if (marketSW != null && marketNE != null)
+                gc.fillText(String.valueOf(gameState.getValue().getDistance(marketSW, marketNE)),
+                        MAP_COORD_X_EDGEVAL_DIAG_FAR,
+                        MAP_COORD_Y_EDGEVAL_DIAG_NEAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+            if (marketNW != null && marketSE != null)
+                gc.fillText(String.valueOf(gameState.getValue().getDistance(marketNW, marketSE)),
+                        MAP_COORD_X_EDGEVAL_DIAG_FAR,
+                        MAP_COORD_Y_EDGEVAL_DIAG_FAR,
+                        MAP_MARKET_NAME_MAX_WIDTH);
+        } catch (UnknownMarketException e) {
+            throw new RuntimeException(e);
+        }
         //endregion
     }
     //endregion
