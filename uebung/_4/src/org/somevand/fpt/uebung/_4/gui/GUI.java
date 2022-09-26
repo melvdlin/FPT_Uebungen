@@ -7,12 +7,13 @@ public interface GUI {
     void setState(GuiDisplayableGameState state);
     void show();
     void hide();
+    void exit();
     void update();
-    void showPopup(String title, String msg);
-    void showPopupSync(String title, String msg);
+    void showPopup(String title, String msg, Callback<Void, Void> onConfirmedListener);
+    void showPopupAndWait(String title, String msg);
 
-    void addOnMarketClickedListener(Callback<? extends GuiDisplayableMarket, Void> listener);
-    void removeOnMarketClickedListener(Callback<? extends GuiDisplayableMarket, Void> listener);
+    void addOnMarketClickedListener(Callback<GuiDisplayableMarket, Void> listener);
+    void removeOnMarketClickedListener(Callback<GuiDisplayableMarket, Void> listener);
     void addOnMarketWareClickedListener(Callback<Ware, Void> listener);
     void removeOnMarketWareClickedListener(Callback<Ware, Void> listener);
     void addOnPlayerWareClickedListener(Callback<Ware, Void> listener);

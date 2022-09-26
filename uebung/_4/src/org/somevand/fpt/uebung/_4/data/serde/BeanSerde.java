@@ -1,12 +1,14 @@
 package org.somevand.fpt.uebung._4.data.serde;
 
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
 import java.io.*;
 
-public class BinarySerde<T extends Serializable> implements Serde<T> {
+public class BeanSerde<T extends Serializable> implements Serde<T> {
 
     private final Class<T> theClass;
 
-    public BinarySerde(Class<T> theClass) {
+    public BeanSerde(Class<T> theClass) {
         this.theClass = theClass;
     }
 
@@ -14,17 +16,17 @@ public class BinarySerde<T extends Serializable> implements Serde<T> {
     public void serialize(T obj, String filename) throws IOException {
         if (filename == null) throw new NullPointerException("filename must not be null");
         try (var fos = new FileOutputStream(filename);
-             var oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(obj);
+             var enc = new XMLEncoder(fos)) {
+            enc.writeObject(obj);
         }
     }
 
     @Override
-    public T deserialize(String filename) throws IOException, ClassNotFoundException, ClassCastException {
+    public T deserialize(String filename) throws IOException, ClassCastException {
         if (filename == null) throw new NullPointerException("filename must not be null");
         try (var fis = new FileInputStream(filename);
-             var ois = new ObjectInputStream(fis)) {
-            return theClass.cast(ois.readObject());
+             var dec = new XMLDecoder(fis)) {
+            return theClass.cast(dec.readObject());
         }
     }
 }

@@ -53,7 +53,7 @@ public class MainTUI {
         Player player = new Player(30, 200, wares);
 
         GameState gameState = new GameState(wares, mdm, player, dinslaken, 1000);
-        GameController controller = new GameController(new BinarySerde<>(), gameState);
+        GameController controller = new GameController(new BinarySerde<>(GameState.class), gameState);
         controller.run();
     }
 }

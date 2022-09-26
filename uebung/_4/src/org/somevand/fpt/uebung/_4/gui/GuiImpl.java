@@ -1,101 +1,87 @@
 package org.somevand.fpt.uebung._4.gui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.somevand.fpt.uebung._4.MainGUI;
 import org.somevand.fpt.uebung._4.data.Ware;
-import org.somevand.fpt.uebung._4.exceptions.UnknownWareException;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class GuiImpl extends Application implements GUI {
-
-    //region Constants
+    //region constants
+    private static final double SQRT_TWO_HALVES = Math.sqrt(2.0) / 2;
     private static final double INITIAL_HEIGHT = 750;
-    private static final double INITIAL_WIDTH = 900;
+    private static final double INITIAL_WIDTH = 800;
     private static final double SPACING = 10.0;
-    private static final Color  MAP_MARKETCOLOR_BASE            = Color.GREY;
-    private static final Color  MAP_MARKETCOLOR_HIGHLIGHT       = Color.GREEN;
-    private static final double MAP_BORDERWIDTH                 = SPACING / 2;
-    private static final double MAP_INNERSIDELENGTH             = 500;
-    private static final double MAP_SIDELENGTH                  = MAP_INNERSIDELENGTH + 2 * MAP_BORDERWIDTH;
-    private static final double MAP_MARKETDIAMETER              = MAP_INNERSIDELENGTH / 4;
-    private static final double MAP_COORD_MARKET_NEAR           = MAP_BORDERWIDTH;
-    private static final double MAP_COORD_MARKET_FAR            = MAP_SIDELENGTH - MAP_BORDERWIDTH - MAP_MARKETDIAMETER;
-    private static final double MAP_COORD_MARKET_EDGE_NEAR      = MAP_MARKETDIAMETER / 2;
-    private static final double MAP_COORD_MARKET_EDGE_FAR       = MAP_SIDELENGTH - MAP_COORD_MARKET_EDGE_NEAR;
-    private static final String TAG_BALANCE                     = "Balance:";
-    private static final String TAG_CARGOSPACE                  = "Available cargo space:";
-    private static final String TAG_FUEL                        = "Remaining fuel:";
-    private static final String TAG_WINBALANCE                  = "Balance needed to retire:";
-    private static final String TAG_TEXTFIELD_SERDEPATH         = "Save/Load Path ...";
-    private static final String TAG_BUTTON_SAVE                 = "Save";
-    private static final String TAG_BUTTON_LOAD                 = "Load";
-    private static final String TAG_BUTTON_EXIT                 = "Exit";
-    private static final String TAG_COLUMN_WARENAME             = "Ware";
-    private static final String TAG_COLUMN_PRICE                = "Price/Unit";
-    private static final String TAG_COLUMN_SIZE                 = "Size";
-    private static final String TAG_COLUMN_COUNT                = "Available";
-    private static final String TAG_MARKETINVENTORY             = "Market Inventory";
-    private static final String TAG_PLAYERINVENTORY             = "Player Inventory";
-    private static final Insets INSETS_BASE                     = new Insets(SPACING, SPACING / 2, 0.0, SPACING / 2);
-    private static final Insets INSETS_TOP                      = new Insets(SPACING * 2, SPACING / 2, 0.0, SPACING / 2);
+    private static final Color  MAP_MARKETCOLOR_BASE                = Color.GREY;
+    private static final Color  MAP_MARKETCOLOR_HIGHLIGHT           = Color.GREEN;
+    private static final double MAP_BORDERWIDTH                     = SPACING / 2;
+    private static final double MAP_INNERSIDELENGTH                 = 500;
+    private static final double MAP_SIDELENGTH                      = MAP_INNERSIDELENGTH + 2 * MAP_BORDERWIDTH;
+    private static final double MAP_MARKETDIAMETER                  = MAP_INNERSIDELENGTH / 4;
+    private static final double MAP_COORD_MARKET_NEAR               = MAP_BORDERWIDTH;
+    private static final double MAP_COORD_MARKET_FAR                = MAP_SIDELENGTH - MAP_BORDERWIDTH - MAP_MARKETDIAMETER;
+    private static final double MAP_COORD_MARKET_EDGE_NEAR          = MAP_BORDERWIDTH + MAP_MARKETDIAMETER / 2;
+    private static final double MAP_COORD_MARKET_EDGE_FAR           = MAP_SIDELENGTH - MAP_COORD_MARKET_EDGE_NEAR;
+    private static final double MAP_COORD_PRIMARY_EDGEVAL_NEAR      = MAP_BORDERWIDTH * 2 + MAP_MARKETDIAMETER;
+    private static final double MAP_COORD_PRIMARY_EDGEVAL_FAR       = MAP_SIDELENGTH - MAP_COORD_PRIMARY_EDGEVAL_NEAR;
+    private static final double MAP_COORD_SECONDARY_EDGEVAL_NEAR    = MAP_COORD_MARKET_EDGE_NEAR - MAP_BORDERWIDTH;
+    private static final double MAP_COORD_SECONDARY_EDGEVAL_FAR     = MAP_SIDELENGTH - MAP_COORD_SECONDARY_EDGEVAL_NEAR;
+    private static final double MAP_COORD_X_EDGEVAL_DIAG_NEAR       = MAP_COORD_MARKET_EDGE_NEAR + SQRT_TWO_HALVES * MAP_MARKETDIAMETER * 1.0 / 2.0 + 4 * MAP_BORDERWIDTH;
+    private static final double MAP_COORD_X_EDGEVAL_DIAG_FAR        = MAP_SIDELENGTH - MAP_COORD_X_EDGEVAL_DIAG_NEAR;
+    private static final double MAP_COORD_Y_EDGEVAL_DIAG_NEAR       = MAP_COORD_MARKET_EDGE_NEAR + SQRT_TWO_HALVES * MAP_MARKETDIAMETER * 1.0 / 2.0 + 0 * MAP_BORDERWIDTH;
+    private static final double MAP_COORD_Y_EDGEVAL_DIAG_FAR        = MAP_SIDELENGTH - MAP_COORD_Y_EDGEVAL_DIAG_NEAR;
+    private static final double MAP_MARKET_NAME_MAX_WIDTH           = MAP_MARKETDIAMETER - MAP_BORDERWIDTH;
+    private static final String TAG_BALANCE                         = "Balance:";
+    private static final String TAG_CARGOSPACE                      = "Available cargo space:";
+    private static final String TAG_FUEL                            = "Remaining fuel:";
+    private static final String TAG_WINBALANCE                      = "Balance needed to retire:";
+    private static final String TAG_BALANCECURRENCY                 = "c";
+    private static final String TAG_CARGOSPACESEPARATOR             = "/";
+    private static final String TAG_TEXTFIELD_SERDEPATH             = "Save/Load Path ...";
+    private static final String TAG_BUTTON_SAVE                     = "Save";
+    private static final String TAG_BUTTON_LOAD                     = "Load";
+    private static final String TAG_BUTTON_EXIT                     = "Exit";
+    private static final String TAG_BUTTON_POPUP                    = "OK";
+    private static final String TAG_COLUMN_WARENAME                 = "Ware";
+    private static final String TAG_COLUMN_PRICE                    = "Price/Unit";
+    private static final String TAG_COLUMN_SIZE                     = "Size";
+    private static final String TAG_COLUMN_COUNT                    = "Available";
+    private static final String TAG_MARKETINVENTORY                 = "Market Inventory";
+    private static final String TAG_PLAYERINVENTORY                 = "Player Inventory";
+    private static final Insets INSETS_BASE                         = new Insets(SPACING, SPACING / 2, 0.0, SPACING / 2);
+    private static final Insets INSETS_TOP                          = new Insets(0.0, SPACING / 2, 0.0, SPACING / 2);
+    private static final Insets INSETS_TOP_SEPARATION               = new Insets(SPACING * 2, SPACING / 2, 0.0, SPACING / 2);
     //endregion
 
+    //region fields
+    private static GuiGameController controller = null;
     private static GuiImpl instance = null;
-
     private static final SimpleObjectProperty<GuiDisplayableGameState> gameState = new SimpleObjectProperty<>(null);
 
-    private Stage primaryStage = null;
-    private final Scene primaryScene = new Scene(new Region(), INITIAL_WIDTH, INITIAL_HEIGHT);
-
-    //region Nodes
-    private final AnchorPane baseAnchorPane                                                     = new AnchorPane();
-        private final HBox baseHBox                                                             = new HBox();
-            private final VBox leftVBox                                                         = new VBox();
-                private final Canvas marketMapCanvas                                            = new Canvas();
-                private final GridPane miscInfoGridPane                                         = new GridPane();
-                    private final Label balanceTagLabel                                         = new Label(TAG_BALANCE);
-                    private final Label balanceLabel                                            = new Label();
-                    private final Label cargoSpaceTagLabel                                      = new Label(TAG_CARGOSPACE);
-                    private final Label cargoSpaceLabel                                         = new Label();
-                    private final Label fuelTagLabel                                            = new Label(TAG_FUEL);
-                    private final Label fuelLabel                                               = new Label();
-                    private final Label winBalanceTagLabel                                      = new Label(TAG_WINBALANCE);
-                    private final Label winBalanceLabel                                         = new Label();
-                private final Region leftSpacerRegion                                           = new Region();
-                private final TextField serdePathTextField                                      = new TextField();
-                private final HBox serdeButtonHBox                                              = new HBox();
-                    private final Button saveButton                                             = new Button(TAG_BUTTON_SAVE);
-                    private final Button loadButton                                             = new Button(TAG_BUTTON_LOAD);
-                    private final Button exitButton                                             = new Button(TAG_BUTTON_EXIT);
-            private final VBox rightVBox                                                        = new VBox();
-                private final Label marketLabel                                                 = new Label(TAG_MARKETINVENTORY);
-                private final TableView<InventoryEntry> marketInventoryTableView                = new TableView<>();
-                    private final TableColumn<InventoryEntry, String> marketNameTableColumn     = new TableColumn<>(TAG_COLUMN_WARENAME);
-                    private final TableColumn<InventoryEntry, Number> marketPriceTableColumn    = new TableColumn<>(TAG_COLUMN_PRICE);
-                    private final TableColumn<InventoryEntry, Number> marketSizeTableColumn     = new TableColumn<>(TAG_COLUMN_SIZE);
-                    private final TableColumn<InventoryEntry, Number> marketCountTableColumn    = new TableColumn<>(TAG_COLUMN_COUNT);
-                private final Label playerLabel                                                 = new Label(TAG_PLAYERINVENTORY);
-                private final TableView<InventoryEntry> playerInventoryTableView                = new TableView<>();
-                    private final TableColumn<InventoryEntry, String> playerNameTableColumn     = new TableColumn<>(TAG_COLUMN_WARENAME);
-                    private final TableColumn<InventoryEntry, Number> playerPriceTableColumn    = new TableColumn<>(TAG_COLUMN_PRICE);
-                    private final TableColumn<InventoryEntry, Number> playerSizeTableColumn     = new TableColumn<>(TAG_COLUMN_SIZE);
-                    private final TableColumn<InventoryEntry, Number> playerCountTableColumn    = new TableColumn<>(TAG_COLUMN_COUNT);
-    //endregion
-    //region Displayed Data
+    //region primary displayed data
     private GuiDisplayableMarket marketNW = null;
     private GuiDisplayableMarket marketNE = null;
     private GuiDisplayableMarket marketSW = null;
@@ -104,42 +90,173 @@ public class GuiImpl extends Application implements GUI {
     private final ObservableList<InventoryEntry> marketInventoryList = FXCollections.observableArrayList();
     private final Map<Ware, InventoryEntry> playerInventoryEntryMap = FXCollections.observableHashMap();
     private final Map<Ware, InventoryEntry> marketInventoryEntryMap = FXCollections.observableHashMap();
+    private final IntegerBinding playerBalance = new IntegerBinding() {
+        {
+            bind(gameState);
+            gameState.addListener((observable, oldValue, newValue) -> {
+                unbind(gameState, oldValue.getPlayer().getBalance());
+                bind(gameState, newValue.getPlayer().getBalance());
+            });
+        }
+        @Override
+        protected int computeValue() {
+            try {
+                return gameState.getValue() == null ? 0 : gameState.getValue().getPlayer().getBalance().getValue().intValue();
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+    };
+    private final IntegerBinding playerCargoSpace = new IntegerBinding() {
+        {
+            bind(gameState);
+            gameState.addListener((observable, oldValue, newValue) -> {
+                unbind(gameState, oldValue.getPlayer().getRemainingCapacity());
+                bind(gameState, newValue.getPlayer().getRemainingCapacity());
+            });
+        }
+        @Override
+        protected int computeValue() {
+            try {
+                return gameState.getValue() == null ? 0 : gameState.getValue().getPlayer().getRemainingCapacity().getValue().intValue();
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+    };
+    private final IntegerBinding playerMaxCargoSpace = Bindings.createIntegerBinding(
+            () -> gameState.getValue() == null ? 0 : gameState.getValue().getPlayer().getMaxCapacity(),
+            gameState
+    );
+    private final IntegerBinding playerFuel= new IntegerBinding() {
+        {
+            bind(gameState);
+            gameState.addListener((observable, oldValue, newValue) -> {
+                unbind(gameState, oldValue.getPlayer().getFuelReach());
+                bind(gameState, newValue.getPlayer().getFuelReach());
+            });
+        }
+        @Override
+        protected int computeValue() {
+            try {
+                return gameState.getValue() == null ? 0 : gameState.getValue().getPlayer().getFuelReach().getValue().intValue();
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+    };
+    private final IntegerBinding winBalance = Bindings.createIntegerBinding(
+            () -> gameState.getValue() == null ? 0 : gameState.getValue().getWinBalance(),
+            gameState
+    );
     //endregion
 
+    //region popup data
+    private final SimpleStringProperty popupTitle = new SimpleStringProperty();
+    private final SimpleStringProperty popupMessage = new SimpleStringProperty();
+    //endregion
+
+    //region user configurable listeners
+    private final List<Callback<GuiDisplayableMarket, Void>> marketClickedListeners = new LinkedList<>();
+    private final List<Callback<Ware, Void>> marketWareClickedListeners = new LinkedList<>();
+    private final List<Callback<Ware, Void>> playerWareClickedListeners = new LinkedList<>();
+    private final List<Callback<String, Void>> saveButtonClickedListeners = new LinkedList<>();
+    private final List<Callback<String, Void>> loadButtonClickedListeners = new LinkedList<>();
+    private final List<Callback<Void, Void>> exitButtonClickedListeners = new LinkedList<>();
+    //endregion
+
+    //region popup listeners
+    private Callback<Void, Void> popupButtonClickedListener = null;
+    //endregion
+
+    //region stages and scenes
+    private Stage primaryStage = null;
+    private final Stage popupStage = new Stage();
+    private final Scene primaryScene = new Scene(new Region(), INITIAL_WIDTH, INITIAL_HEIGHT);
+    private final Scene popupScene = new Scene(new Region());
+    //endregion
+
+    //region primary stage nodes
+    private final AnchorPane baseAnchorPane                                                                 = new AnchorPane();
+        private final HBox baseHBox                                                                         = new HBox();
+            private final VBox leftVBox                                                                     = new VBox();
+                private final Canvas marketMapCanvas                                                        = new Canvas();
+                private final GridPane miscInfoGridPane                                                     = new GridPane();
+                    private final Label balanceTagLabel                                                     = new Label();
+                    private final Label balanceLabel                                                        = new Label();
+                    private final Label cargoSpaceTagLabel                                                  = new Label();
+                    private final Label cargoSpaceLabel                                                     = new Label();
+                    private final Label fuelTagLabel                                                        = new Label();
+                    private final Label fuelLabel                                                           = new Label();
+                    private final Label winBalanceTagLabel                                                  = new Label();
+                    private final Label winBalanceLabel                                                     = new Label();
+                private final Region leftSpacerRegion                                                       = new Region();
+                private final TextField serdePathTextField                                                  = new TextField();
+                private final HBox serdeButtonHBox                                                          = new HBox();
+                    private final Button saveButton                                                         = new Button();
+                    private final Button loadButton                                                         = new Button();
+                    private final Button exitButton                                                         = new Button();
+            private final VBox rightVBox                                                                    = new VBox();
+                private final Label marketLabel                                                             = new Label();
+                private final TableView<InventoryEntry> marketInventoryTableView                            = new TableView<>();
+                    private final TableColumn<InventoryEntry, String> marketNameTableColumn                 = new TableColumn<>();
+                    private final TableColumn<InventoryEntry, Number> marketPriceTableColumn                = new TableColumn<>();
+                    private final TableColumn<InventoryEntry, Number> marketSizeTableColumn                 = new TableColumn<>();
+                    private final TableColumn<InventoryEntry, Number> marketCountTableColumn                = new TableColumn<>();
+                private final Label playerLabel                                                             = new Label();
+                private final TableView<InventoryEntry> playerInventoryTableView                            = new TableView<>();
+                    private final TableColumn<InventoryEntry, String> playerNameTableColumn                 = new TableColumn<>();
+                    private final TableColumn<InventoryEntry, Number> playerPriceTableColumn                = new TableColumn<>();
+                    private final TableColumn<InventoryEntry, Number> playerSizeTableColumn                 = new TableColumn<>();
+                    private final TableColumn<InventoryEntry, Number> playerCountTableColumn                = new TableColumn<>();
+    //endregion
+
+    //region popup stage nodes
+    private final AnchorPane popupAnchorPane                                                                = new AnchorPane();
+        private final VBox popupVBox                                                                        = new VBox();
+            private final Text popupMessageText                                                             = new Text();
+            private final Button popupButton                                                                = new Button();
+    //endregion
+
+    //endregion
+
+    //region methods
     public static GuiImpl getInstance() {
         return instance;
     }
 
-    public static GUI launch(GuiDisplayableGameState state) {
+    //region launch methods
+    public static void launch() {
+        launch((GuiDisplayableGameState) null);
+    }
+
+    public static void launch(GuiGameController controller) {
+        GuiImpl.controller = Objects.requireNonNull(controller);
+        launch((GuiDisplayableGameState) null);
+    }
+
+    public static void launch(GuiDisplayableGameState state) {
         staticSetState(state);
         Application.launch();
-        return getInstance();
     }
+    //endregion
 
-    public static GUI launch() {
-        return launch((GuiDisplayableGameState) null);
+    //region gameState setters
+    private static void staticSetState(GuiDisplayableGameState state) {
+        if (gameState.getValue() == state) return;
+        gameState.set(state);
     }
+    @Override
+    public void setState(GuiDisplayableGameState state) {
+        staticSetState(state);
+    }
+    //endregion
 
+    // region application init / start / stop methods
     @Override
     public void init() {
         instance = this;
         gameState.addListener(this::onStateChanged);
-
-        marketInventoryTableView.setItems(marketInventoryList);
-        playerInventoryTableView.setItems(playerInventoryList);
-
-        exitButton.setOnAction(event -> {
-            gameState.get().getPlayer().getInventory().put(MainGUI.pen, 5);
-            gameState.get().getCurrentMarket().getValue().getInventory().put(MainGUI.paper, 10);
-        });
-
-        onStateChanged(gameState, null, gameState.get());
-        // TODO: implement
-    }
-
-    @Override
-    public void stop() {
-        // TODO: implement
     }
 
     @Override
@@ -148,35 +265,235 @@ public class GuiImpl extends Application implements GUI {
         this.primaryStage.setScene(primaryScene);
         this.primaryScene.setRoot(baseAnchorPane);
 
-        buildUI();
-        drawMap();
-        // playerInventoryList.add(new PlayerInventoryEntry(MainGUI.pen, gameState.get().getCurrentMarket(), MainGUI.mockPlayer));
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.initOwner(this.primaryStage);
+        popupStage.setScene(popupScene);
+        popupScene.setRoot(popupAnchorPane);
+        popupStage.setResizable(false);
 
-//        miscInfoGridPane.setGridLinesVisible(true);
+        assembleUINodes();
+        assemblePopupNodes();
+        setUIStyle();
+        setPopupStyle();
+        setUIListeners();
+        setPopupListeners();
+        linkUIToDataModel();
+        linkPopupToDataModel();
+
+        update();
+
+        miscInfoGridPane.setGridLinesVisible(true);
 
         primaryStage.show();
+        primaryStage.sizeToScene();
         primaryStage.setMinHeight(primaryStage.getHeight());
         primaryStage.setMinWidth(primaryStage.getWidth());
-    }
+        Platform.setImplicitExit(false);
 
-    public void setState(GuiDisplayableGameState state) {
-        staticSetState(state);
-        // TODO: implement
+        if (controller != null) controller.setup(getInstance());
     }
 
     @Override
+    public void stop() {
+        this.primaryStage = null;
+    }
+    //endregion
+
+    //region stage control methods
+    @Override
     public void show() {
-        // TODO: implement
+        primaryStage.show();
     }
 
     @Override
     public void hide() {
-        // TODO: implement
+        primaryStage.hide();
+    }
+
+    @Override
+    public void exit() {
+        Platform.exit();
     }
 
     @Override
     public void update() {
-        drawMap();
+        updateData();
+        updateDisplay();
+    }
+
+    @Override
+    public void showPopup(String title, String msg, Callback<Void, Void> onConfirmedListener) {
+        updatePopup(title, msg, onConfirmedListener);
+        popupStage.show();
+    }
+
+    @Override
+    public void showPopupAndWait(String title, String msg) {
+        updatePopup(title, msg, null);
+        popupStage.showAndWait();
+    }
+    //endregion
+
+    //region user configurable listener management methods
+    @Override
+    public void addOnMarketClickedListener(Callback<GuiDisplayableMarket, Void> listener) {
+        marketClickedListeners.add(listener);
+    }
+
+    @Override
+    public void removeOnMarketClickedListener(Callback<GuiDisplayableMarket, Void> listener) {
+        marketClickedListeners.remove(listener);
+    }
+
+    @Override
+    public void addOnMarketWareClickedListener(Callback<Ware, Void> listener) {
+        marketWareClickedListeners.add(listener);
+    }
+
+    @Override
+    public void removeOnMarketWareClickedListener(Callback<Ware, Void> listener) {
+        marketWareClickedListeners.remove(listener);
+    }
+
+    @Override
+    public void addOnPlayerWareClickedListener(Callback<Ware, Void> listener) {
+        playerWareClickedListeners.add(listener);
+    }
+
+    @Override
+    public void removeOnPlayerWareClickedListener(Callback<Ware, Void> listener) {
+        playerWareClickedListeners.remove(listener);
+    }
+
+    @Override
+    public void addOnSaveButtonClickedListener(Callback<String, Void> listener) {
+        saveButtonClickedListeners.add(listener);
+    }
+
+    @Override
+    public void removeOnSaveButtonClickedListener(Callback<String, Void> listener) {
+        saveButtonClickedListeners.remove(listener);
+    }
+
+    @Override
+    public void addOnLoadButtonClickedListener(Callback<String, Void> listener) {
+        loadButtonClickedListeners.add(listener);
+    }
+
+    @Override
+    public void removeOnLoadButtonClickedListener(Callback<String, Void> listener) {
+        loadButtonClickedListeners.remove(listener);
+    }
+
+    @Override
+    public void addOnExitButtonClickedListener(Callback<Void, Void> listener) {
+        exitButtonClickedListeners.add(listener);
+    }
+
+    @Override
+    public void removeOnExitButtonClickedListener(Callback<Void, Void> listener) {
+        exitButtonClickedListeners.remove(listener);
+    }
+    //endregion
+
+    //region listener methods
+    private void onStateChanged(
+            ObservableValue<? extends GuiDisplayableGameState> stateProperty,
+            GuiDisplayableGameState oldState,
+            GuiDisplayableGameState newState) {
+        update();
+    }
+
+    private void onSaveButtonClicked(ActionEvent event) {
+        for (var listener : saveButtonClickedListeners)
+            listener.call(serdePathTextField.getText());
+    }
+
+    private void onLoadButtonClicked(ActionEvent event) {
+        for (var listener : loadButtonClickedListeners)
+            listener.call(serdePathTextField.getText());
+    }
+
+    private void onExitButtonClicked(ActionEvent event) {
+        for (var listener : exitButtonClickedListeners)
+            listener.call(null);
+    }
+
+    private void onMarketInventoryRowClicked(MouseEvent event) {
+        if (event.getSource() instanceof TableRow<?> tr && tr.getItem() instanceof InventoryEntry entry) {
+            for (var listener : marketWareClickedListeners) {
+                listener.call(entry.getWare());
+            }
+        }
+    }
+
+    private void onPlayerInventoryRowClicked(MouseEvent event) {
+        if (event.getSource() instanceof TableRow<?> tr && tr.getItem() instanceof InventoryEntry entry) {
+            for (var listener : playerWareClickedListeners) {
+                listener.call(entry.getWare());
+            }
+        }
+    }
+
+    private void onMapClicked(MouseEvent event) {
+        final double x = event.getX();
+        final double y = event.getY();
+
+        GuiDisplayableMarket market = null;
+
+        // distance to center of NW market circle
+        final double distToNW = Math.sqrt(
+                (x - MAP_COORD_MARKET_EDGE_NEAR) * (x - MAP_COORD_MARKET_EDGE_NEAR) +
+                (y - MAP_COORD_MARKET_EDGE_NEAR) * (y - MAP_COORD_MARKET_EDGE_NEAR)
+        );
+        // distance to center of NE market circle
+        final double distToNE = Math.sqrt(
+                (x - MAP_COORD_MARKET_EDGE_FAR)  * (x - MAP_COORD_MARKET_EDGE_FAR) +
+                (y - MAP_COORD_MARKET_EDGE_NEAR) * (y - MAP_COORD_MARKET_EDGE_NEAR)
+        );
+        // distance to center of SW market circle
+        final double distToSW = Math.sqrt(
+                (x - MAP_COORD_MARKET_EDGE_NEAR) * (x - MAP_COORD_MARKET_EDGE_NEAR) +
+                (y - MAP_COORD_MARKET_EDGE_FAR)  * (y - MAP_COORD_MARKET_EDGE_FAR)
+        );
+        // distance to center of SE market circle
+        final double distToSE = Math.sqrt(
+                (x - MAP_COORD_MARKET_EDGE_FAR)  * (x - MAP_COORD_MARKET_EDGE_FAR) +
+                (y - MAP_COORD_MARKET_EDGE_FAR)  * (y - MAP_COORD_MARKET_EDGE_FAR)
+        );
+
+        if (distToNW < MAP_MARKETDIAMETER / 2) {
+            market = marketNW;
+        } else if (distToNE < MAP_MARKETDIAMETER / 2) {
+            market = marketNE;
+        } else if (distToSW < MAP_MARKETDIAMETER / 2) {
+            market = marketSW;
+        } else if (distToSE < MAP_MARKETDIAMETER / 2) {
+            market = marketSE;
+        }
+
+        if (market != null) {
+            for (var listener : marketClickedListeners) {
+                listener.call(market);
+            }
+        }
+    }
+
+    private void onPopupButtonClicked(ActionEvent event) {
+        if (popupButtonClickedListener != null)
+            popupButtonClickedListener.call(null);
+        popupStage.hide();
+    }
+    //endregion
+
+    //region data update methods
+    private void updateData() {
+        try {
+            marketNW = gameState.getValue().getMarkets().get(0);
+            marketNE = gameState.getValue().getMarkets().get(1);
+            marketSW = gameState.getValue().getMarkets().get(2);
+            marketSE = gameState.getValue().getMarkets().get(3);
+        } catch (IndexOutOfBoundsException ignored) { }
 
         marketInventoryList.clear();
         playerInventoryList.clear();
@@ -184,150 +501,6 @@ public class GuiImpl extends Application implements GUI {
         playerInventoryEntryMap.clear();
         populateMarketInventory();
         populatePlayerInventory();
-        try {
-            updateInventoryPrices();
-        } catch (UnknownWareException e) {
-            throw new RuntimeException(e);
-        }
-        updateMarketInventoryCounts();
-        updatePlayerInventoryCounts();
-
-    }
-
-    @Override
-    public void showPopup(String title, String msg) {
-        // TODO: implement
-    }
-
-    @Override
-    public void showPopupSync(String title, String msg) {
-        // TODO: implement
-    }
-
-    @Override
-    public void addOnMarketClickedListener(Callback<? extends GuiDisplayableMarket, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void removeOnMarketClickedListener(Callback<? extends GuiDisplayableMarket, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void addOnMarketWareClickedListener(Callback<Ware, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void removeOnMarketWareClickedListener(Callback<Ware, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void addOnPlayerWareClickedListener(Callback<Ware, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void removeOnPlayerWareClickedListener(Callback<Ware, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void addOnSaveButtonClickedListener(Callback<String, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void removeOnSaveButtonClickedListener(Callback<String, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void addOnLoadButtonClickedListener(Callback<String, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void removeOnLoadButtonClickedListener(Callback<String, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void addOnExitButtonClickedListener(Callback<Void, Void> listener) {
-        // TODO: implement
-    }
-
-    @Override
-    public void removeOnExitButtonClickedListener(Callback<Void, Void> listener) {
-        // TODO: implement
-    }
-
-    private static void staticSetState(GuiDisplayableGameState state) {
-        if (gameState.get() == state) return;
-        gameState.set(state);
-    }
-
-    private void onStateChanged(
-            ObservableValue<? extends GuiDisplayableGameState> stateProperty,
-            GuiDisplayableGameState oldState,
-            GuiDisplayableGameState newState) {
-
-        //region deregister listeners from old state
-        if (oldState != null) {
-            oldState.getCurrentMarket().removeListener(this::onCurrentMarketChanged);
-            oldState.getCurrentMarket().getValue().getInventory().removeListener(this::onMarketInventoryChanged);
-            oldState.getPlayer().getInventory().removeListener(this::onPlayerInventoryChanged);
-        }
-        //endregion
-
-        //region register listeners on new state
-        if (newState != null) {
-            newState.getCurrentMarket().addListener(this::onCurrentMarketChanged);
-            newState.getCurrentMarket().getValue().getInventory().addListener(this::onMarketInventoryChanged);
-            newState.getPlayer().getInventory().addListener(this::onPlayerInventoryChanged);
-        }
-        //endregion
-
-        update();
-    }
-
-    private void onCurrentMarketChanged(
-            ObservableValue<? extends GuiDisplayableMarket> market,
-            GuiDisplayableMarket oldMarket,
-            GuiDisplayableMarket newMarket) {
-
-        //region deregister inventory listener from old market
-        if (oldMarket != null) {
-            oldMarket.getInventory().removeListener(this::onMarketInventoryChanged);
-        }
-        //endregion
-
-        //region register inventory listener on new market
-        if (newMarket != null) {
-            newMarket.getInventory().addListener(this::onMarketInventoryChanged);
-        }
-
-        marketInventoryList.clear();
-        populateMarketInventory();
-        drawMap();
-    }
-
-    private void onMarketInventoryChanged(MapChangeListener.Change<? extends Ware, ? extends Integer> change) {
-        if (change.wasAdded()) {
-            marketInventoryEntryMap.get(change.getKey()).countProperty().set(change.getValueAdded());
-        } else if (change.wasRemoved()) {
-            marketInventoryList.remove(marketInventoryEntryMap.get(change.getKey()));
-        }
-    }
-
-    private void onPlayerInventoryChanged(MapChangeListener.Change<? extends Ware, ? extends Integer> change) {
-        if (change.wasAdded()) {
-            playerInventoryEntryMap.get(change.getKey()).countProperty().set(change.getValueAdded());
-        } else if (change.wasRemoved()) {
-            playerInventoryList.remove(playerInventoryEntryMap.get(change.getKey()));
-        }
     }
 
     private void populateMarketInventory() {
@@ -335,7 +508,7 @@ public class GuiImpl extends Application implements GUI {
             if (marketInventoryEntryMap.containsKey(entry.getKey())) {
                 marketInventoryList.add(marketInventoryEntryMap.get(entry.getKey()));
             } else {
-                var inventoryEntry = new InventoryEntry(entry.getKey(), gameState.get().getCurrentMarket());
+                var inventoryEntry = (InventoryEntry) new MarketInventoryEntry(entry.getKey(), gameState.get());
                 marketInventoryEntryMap.put(entry.getKey(), inventoryEntry);
                 marketInventoryList.add(inventoryEntry);
             }
@@ -347,43 +520,221 @@ public class GuiImpl extends Application implements GUI {
             if (playerInventoryEntryMap.containsKey(entry.getKey())) {
                 playerInventoryList.add(playerInventoryEntryMap.get(entry.getKey()));
             } else {
-                var inventoryEntry = new InventoryEntry(entry.getKey(), gameState.get().getCurrentMarket());
+                var inventoryEntry = (InventoryEntry) new PlayerInventoryEntry(entry.getKey(), gameState.get());
                 playerInventoryEntryMap.put(entry.getKey(), inventoryEntry);
                 playerInventoryList.add(inventoryEntry);
             }
         }
     }
 
-    private void updateInventoryPrices() throws UnknownWareException {
-        for (var entry : marketInventoryList) {
-            entry.priceProperty().set(gameState.get().getCurrentMarket().getValue().getLocalPrice(entry.getWare()));
-        }
-        for (var entry : playerInventoryList) {
-            entry.priceProperty().set(gameState.get().getCurrentMarket().getValue().getLocalPrice(entry.getWare()));
-        }
+    private void updatePopup(String title, String msg, Callback<Void, Void> onConfirmedListener) {
+        popupTitle.set(title);
+        popupMessage.set(msg);
+        popupButtonClickedListener = onConfirmedListener;
+    }
+    //endregion
+
+    //region display update methods
+    private void updateDisplay() {
+        drawMap();
     }
 
-    private void updateMarketInventoryCounts() {
-        for (var entry : marketInventoryList) {
-            updateMarketInventoryCount(entry);
-        }
-    }
+    private void drawMap() {
+        var gc = marketMapCanvas.getGraphicsContext2D();
+        marketMapCanvas.setWidth(MAP_SIDELENGTH);
+        marketMapCanvas.setHeight(MAP_SIDELENGTH);
+        gc.clearRect(
+                0.0,
+                0.0,
+                marketMapCanvas.getWidth(),
+                marketMapCanvas.getHeight());
 
-    private void updatePlayerInventoryCounts() {
-        for (var entry : playerInventoryList) {
-            updatePlayerInventoryCount(entry);
-        }
-    }
+        //region edges
+        gc.strokeLine(
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_FAR,
+                MAP_COORD_MARKET_EDGE_NEAR);
+        gc.strokeLine(
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_FAR,
+                MAP_COORD_MARKET_EDGE_FAR,
+                MAP_COORD_MARKET_EDGE_FAR);
+        gc.strokeLine(
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_FAR);
+        gc.strokeLine(
+                MAP_COORD_MARKET_EDGE_FAR,
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_FAR,
+                MAP_COORD_MARKET_EDGE_FAR);
+        gc.strokeLine(
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_FAR,
+                MAP_COORD_MARKET_EDGE_FAR);
+        gc.strokeLine(
+                MAP_COORD_MARKET_EDGE_NEAR,
+                MAP_COORD_MARKET_EDGE_FAR,
+                MAP_COORD_MARKET_EDGE_FAR,
+                MAP_COORD_MARKET_EDGE_NEAR);
+        //endregion
 
-    private void updateMarketInventoryCount(InventoryEntry entry) {
-        entry.countProperty().set(gameState.get().getCurrentMarket().getValue().getInventory().get(entry.getWare()));
-    }
+        //region node fills
+        gc.setFill(MAP_MARKETCOLOR_BASE);
+        if (gameState.get() != null && gameState.get().getCurrentMarket().getValue() == marketNW)
+            gc.setFill(MAP_MARKETCOLOR_HIGHLIGHT);
+        gc.fillOval(
+                MAP_COORD_MARKET_NEAR,
+                MAP_COORD_MARKET_NEAR,
+                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        gc.setFill(MAP_MARKETCOLOR_BASE);
+        if (gameState.get() != null && gameState.get().getCurrentMarket().getValue() == marketNE)
+            gc.setFill(MAP_MARKETCOLOR_HIGHLIGHT);
+        gc.fillOval(
+                MAP_COORD_MARKET_FAR,
+                MAP_COORD_MARKET_NEAR,
+                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        gc.setFill(MAP_MARKETCOLOR_BASE);
+        if (gameState.get() != null && gameState.get().getCurrentMarket().getValue() == marketSW)
+            gc.setFill(MAP_MARKETCOLOR_HIGHLIGHT);
+        gc.fillOval(
+                MAP_COORD_MARKET_NEAR,
+                MAP_COORD_MARKET_FAR,
+                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        gc.setFill(MAP_MARKETCOLOR_BASE);
+        if (gameState.get() != null && gameState.get().getCurrentMarket().getValue() == marketSE)
+            gc.setFill(MAP_MARKETCOLOR_HIGHLIGHT);
+        gc.fillOval(
+                MAP_COORD_MARKET_FAR,
+                MAP_COORD_MARKET_FAR,
+                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        //endregion
 
-    private void updatePlayerInventoryCount(InventoryEntry entry) {
-        entry.countProperty().set(gameState.get().getPlayer().getInventory().get(entry.getWare()));
-    }
+        //region node edges
+        gc.strokeOval(
+                MAP_COORD_MARKET_NEAR,
+                MAP_COORD_MARKET_NEAR,
+                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        gc.strokeOval(
+                MAP_COORD_MARKET_FAR,
+                MAP_COORD_MARKET_NEAR,
+                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        gc.strokeOval(
+                MAP_COORD_MARKET_NEAR,
+                MAP_COORD_MARKET_FAR,
+                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        gc.strokeOval(
+                MAP_COORD_MARKET_FAR,
+                MAP_COORD_MARKET_FAR,
+                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        //endregion
 
-    private void buildUI() {
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.setFont(Font.font(gc.getFont().getFamily(), FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14.0));
+
+        //region market names
+        gc.setFill(Color.BLACK);
+        gc.setStroke(Color.WHITE);
+        if (marketNW != null)
+            gc.fillText(marketNW.getName(), MAP_COORD_MARKET_EDGE_NEAR, MAP_COORD_MARKET_EDGE_NEAR, MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketNE != null)
+            gc.fillText(marketNE.getName(), MAP_COORD_MARKET_EDGE_FAR, MAP_COORD_MARKET_EDGE_NEAR, MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketSW != null)
+            gc.fillText(marketSW.getName(), MAP_COORD_MARKET_EDGE_NEAR, MAP_COORD_MARKET_EDGE_FAR, MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketSE != null)
+            gc.fillText(marketSE.getName(), MAP_COORD_MARKET_EDGE_FAR, MAP_COORD_MARKET_EDGE_FAR, MAP_MARKET_NAME_MAX_WIDTH);
+        //endregion
+
+        //region market distances
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.setTextBaseline(VPos.TOP);
+        if (marketSW != null && marketNW != null)
+            gc.fillText(
+                    String.valueOf(gameState.getValue().getDistance(marketSW, marketNW)),
+                    MAP_COORD_SECONDARY_EDGEVAL_NEAR,
+                    MAP_COORD_PRIMARY_EDGEVAL_NEAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketSW != null && marketSE != null)
+            gc.fillText(
+                    String.valueOf(gameState.getValue().getDistance(marketSW, marketSE)),
+                    MAP_COORD_PRIMARY_EDGEVAL_FAR,
+                    MAP_COORD_SECONDARY_EDGEVAL_FAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+
+        gc.setTextBaseline(VPos.BOTTOM);
+        if (marketNW != null && marketSW != null)
+            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketNW, marketSW)),
+                    MAP_COORD_SECONDARY_EDGEVAL_NEAR,
+                    MAP_COORD_PRIMARY_EDGEVAL_FAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketNW != null && marketNE != null)
+            gc.fillText(
+                    String.valueOf(gameState.getValue().getDistance(marketNW, marketNE)),
+                    MAP_COORD_PRIMARY_EDGEVAL_FAR,
+                    MAP_COORD_SECONDARY_EDGEVAL_NEAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setTextBaseline(VPos.TOP);
+        if (marketSE != null && marketNE != null)
+            gc.fillText(String.valueOf(
+                    gameState.getValue().getDistance(marketSE, marketNE)),
+                    MAP_COORD_SECONDARY_EDGEVAL_FAR,
+                    MAP_COORD_PRIMARY_EDGEVAL_NEAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketSE != null && marketSW != null)
+            gc.fillText(String.valueOf(
+                    gameState.getValue().getDistance(marketSE, marketSW)),
+                    MAP_COORD_PRIMARY_EDGEVAL_NEAR,
+                    MAP_COORD_SECONDARY_EDGEVAL_FAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        gc.setTextBaseline(VPos.BOTTOM);
+        if (marketNE != null && marketSE != null)
+            gc.fillText(String.valueOf(
+                    gameState.getValue().getDistance(marketNE, marketSE)),
+                    MAP_COORD_SECONDARY_EDGEVAL_FAR,
+                    MAP_COORD_PRIMARY_EDGEVAL_FAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketNE != null && marketNW != null)
+            gc.fillText(String.valueOf(
+                    gameState.getValue().getDistance(marketNE, marketNW)),
+                    MAP_COORD_PRIMARY_EDGEVAL_NEAR,
+                    MAP_COORD_SECONDARY_EDGEVAL_NEAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+
+        gc.setTextBaseline(VPos.CENTER);
+        gc.setTextAlign(TextAlignment.LEFT);
+        if (marketSE != null && marketNW != null)
+            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketSE, marketNW)),
+                    MAP_COORD_X_EDGEVAL_DIAG_NEAR,
+                    MAP_COORD_Y_EDGEVAL_DIAG_NEAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketNE != null && marketSW != null)
+            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketNE, marketSW)),
+                    MAP_COORD_X_EDGEVAL_DIAG_NEAR,
+                    MAP_COORD_Y_EDGEVAL_DIAG_FAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        gc.setTextAlign(TextAlignment.RIGHT);
+        if (marketSW != null && marketNE != null)
+            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketSW, marketNE)),
+                    MAP_COORD_X_EDGEVAL_DIAG_FAR,
+                    MAP_COORD_Y_EDGEVAL_DIAG_NEAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        if (marketNW != null && marketSE != null)
+            gc.fillText(String.valueOf(gameState.getValue().getDistance(marketNW, marketSE)),
+                    MAP_COORD_X_EDGEVAL_DIAG_FAR,
+                    MAP_COORD_Y_EDGEVAL_DIAG_FAR,
+                    MAP_MARKET_NAME_MAX_WIDTH);
+        //endregion
+    }
+    //endregion
+
+    //region UI initialisation methods
+    private void assembleUINodes() {
         baseAnchorPane.getChildren().add(baseHBox);
         baseHBox.getChildren().add(leftVBox);
         leftVBox.getChildren().add(marketMapCanvas);
@@ -415,32 +766,70 @@ public class GuiImpl extends Application implements GUI {
         playerInventoryTableView.getColumns().add(playerPriceTableColumn);
         playerInventoryTableView.getColumns().add(playerSizeTableColumn);
         playerInventoryTableView.getColumns().add(playerCountTableColumn);
+    }
 
-        marketNameTableColumn.setCellValueFactory(entry -> entry.getValue().nameProperty());
-        marketPriceTableColumn.setCellValueFactory(entry -> entry.getValue().priceProperty());
-        marketSizeTableColumn.setCellValueFactory(entry -> entry.getValue().sizeProperty());
-        marketCountTableColumn.setCellValueFactory(entry -> entry.getValue().countProperty());
-        playerNameTableColumn.setCellValueFactory(entry -> entry.getValue().nameProperty());
-        playerPriceTableColumn.setCellValueFactory(entry -> entry.getValue().priceProperty());
-        playerSizeTableColumn.setCellValueFactory(entry -> entry.getValue().sizeProperty());
-        playerCountTableColumn.setCellValueFactory(entry -> entry.getValue().countProperty());
+    private void assemblePopupNodes() {
+        popupAnchorPane.getChildren().add(popupVBox);
+        popupVBox.getChildren().add(popupMessageText);
+        popupVBox.getChildren().add(popupButton);
+    }
 
-        marketLabel.setUnderline(true);
-        playerLabel.setUnderline(true);
+    private void setUIStyle() {
+        balanceTagLabel.setText(TAG_BALANCE);
+        cargoSpaceTagLabel.setText(TAG_CARGOSPACE);
+        fuelTagLabel.setText(TAG_FUEL);
+        winBalanceTagLabel.setText(TAG_WINBALANCE);
+        marketLabel.setText(TAG_MARKETINVENTORY);
+        playerLabel.setText(TAG_PLAYERINVENTORY);
+        marketNameTableColumn.setText(TAG_COLUMN_WARENAME);
+        marketPriceTableColumn.setText(TAG_COLUMN_PRICE);
+        marketSizeTableColumn.setText(TAG_COLUMN_SIZE);
+        marketCountTableColumn.setText(TAG_COLUMN_COUNT);
+        playerNameTableColumn.setText(TAG_COLUMN_WARENAME);
+        playerPriceTableColumn.setText(TAG_COLUMN_PRICE);
+        playerSizeTableColumn.setText(TAG_COLUMN_SIZE);
+        playerCountTableColumn.setText(TAG_COLUMN_COUNT);
+
+        marketNameTableColumn.prefWidthProperty().bind(playerNameTableColumn.widthProperty());
+        marketPriceTableColumn.prefWidthProperty().bind(playerPriceTableColumn.widthProperty());
+        marketSizeTableColumn.prefWidthProperty().bind(playerSizeTableColumn.widthProperty());
+        marketCountTableColumn.prefWidthProperty().bind(playerCountTableColumn.widthProperty());
+        playerNameTableColumn.prefWidthProperty().bind(marketNameTableColumn.widthProperty());
+        playerPriceTableColumn.prefWidthProperty().bind(marketPriceTableColumn.widthProperty());
+        playerSizeTableColumn.prefWidthProperty().bind(marketSizeTableColumn.widthProperty());
+        playerCountTableColumn.prefWidthProperty().bind(marketCountTableColumn.widthProperty());
+
+        final Callback<TableColumn<InventoryEntry, Number>, TableCell<InventoryEntry, Number>> baseCF = marketPriceTableColumn.getCellFactory();
+        final Callback<TableColumn<InventoryEntry, Number>, TableCell<InventoryEntry, Number>> rightAlignCF = param -> {
+            var cell = baseCF.call(param);
+            cell.setAlignment(Pos.CENTER_RIGHT);
+            return cell;
+        };
+        marketPriceTableColumn.setCellFactory(rightAlignCF);
+        marketSizeTableColumn.setCellFactory(rightAlignCF);
+        marketCountTableColumn.setCellFactory(rightAlignCF);
+        playerPriceTableColumn.setCellFactory(rightAlignCF);
+        playerSizeTableColumn.setCellFactory(rightAlignCF);
+        playerCountTableColumn.setCellFactory(rightAlignCF);
+
+        saveButton.setText(TAG_BUTTON_SAVE);
+        loadButton.setText(TAG_BUTTON_LOAD);
+        exitButton.setText(TAG_BUTTON_EXIT);
+
         VBox.setMargin(miscInfoGridPane, INSETS_BASE);
-        VBox.setMargin(serdePathTextField, INSETS_TOP);
+        VBox.setMargin(serdePathTextField, INSETS_TOP_SEPARATION);
         VBox.setMargin(serdeButtonHBox, INSETS_BASE);
-        VBox.setMargin(marketLabel, INSETS_BASE);
-        VBox.setMargin(playerLabel, INSETS_TOP);
+        VBox.setMargin(marketLabel, INSETS_TOP);
+        VBox.setMargin(playerLabel, INSETS_TOP_SEPARATION);
         VBox.setMargin(marketInventoryTableView, INSETS_BASE);
         VBox.setMargin(playerInventoryTableView, INSETS_BASE);
-
-        serdeButtonHBox.setSpacing(SPACING);
 
         AnchorPane.setBottomAnchor(baseHBox, SPACING * 1.5);
         AnchorPane.setLeftAnchor(baseHBox, SPACING);
         AnchorPane.setRightAnchor(baseHBox, SPACING);
         AnchorPane.setTopAnchor(baseHBox, SPACING);
+
+        serdeButtonHBox.setSpacing(SPACING);
 
         HBox.setHgrow(leftVBox, Priority.NEVER);
         HBox.setHgrow(rightVBox, Priority.SOMETIMES);
@@ -449,6 +838,9 @@ public class GuiImpl extends Application implements GUI {
         HBox.setHgrow(loadButton, Priority.ALWAYS);
         HBox.setHgrow(exitButton, Priority.ALWAYS);
         VBox.setVgrow(leftSpacerRegion, Priority.ALWAYS);
+
+        miscInfoGridPane.setHgap(SPACING);
+        miscInfoGridPane.setVgap(SPACING);
 
         serdeButtonHBox.setAlignment(Pos.CENTER);
         saveButton.setAlignment(Pos.CENTER);
@@ -460,8 +852,8 @@ public class GuiImpl extends Application implements GUI {
 
         serdePathTextField.setPromptText(TAG_TEXTFIELD_SERDEPATH);
 
-        miscInfoGridPane.setHgap(SPACING);
-        miscInfoGridPane.setVgap(SPACING);
+        marketLabel.setUnderline(true);
+        playerLabel.setUnderline(true);
 
         GridPane.setConstraints(
                 balanceTagLabel,
@@ -552,90 +944,74 @@ public class GuiImpl extends Application implements GUI {
                 Priority.NEVER);
     }
 
-    public void drawMap() {
-        marketMapCanvas.setWidth(MAP_SIDELENGTH);
-        marketMapCanvas.setHeight(MAP_SIDELENGTH);
-        marketMapCanvas.getGraphicsContext2D().clearRect(
-                0.0,
-                0.0,
-                marketMapCanvas.getWidth(),
-                marketMapCanvas.getHeight());
+    private void setPopupStyle() {
+        AnchorPane.setBottomAnchor(popupVBox, SPACING * 1.5);
+        AnchorPane.setLeftAnchor(popupVBox, SPACING);
+        AnchorPane.setRightAnchor(popupVBox, SPACING);
+        AnchorPane.setTopAnchor(popupVBox, SPACING);
 
-        marketMapCanvas.getGraphicsContext2D().strokeLine(
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_FAR,
-                MAP_COORD_MARKET_EDGE_NEAR);
-        marketMapCanvas.getGraphicsContext2D().strokeLine(
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_FAR,
-                MAP_COORD_MARKET_EDGE_FAR,
-                MAP_COORD_MARKET_EDGE_FAR);
-        marketMapCanvas.getGraphicsContext2D().strokeLine(
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_FAR);
-        marketMapCanvas.getGraphicsContext2D().strokeLine(
-                MAP_COORD_MARKET_EDGE_FAR,
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_FAR,
-                MAP_COORD_MARKET_EDGE_FAR);
-        marketMapCanvas.getGraphicsContext2D().strokeLine(
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_FAR,
-                MAP_COORD_MARKET_EDGE_FAR);
-        marketMapCanvas.getGraphicsContext2D().strokeLine(
-                MAP_COORD_MARKET_EDGE_NEAR,
-                MAP_COORD_MARKET_EDGE_FAR,
-                MAP_COORD_MARKET_EDGE_FAR,
-                MAP_COORD_MARKET_EDGE_NEAR);
+        VBox.setMargin(popupMessageText, INSETS_TOP);
+        VBox.setMargin(popupButton, INSETS_BASE);
+        VBox.setVgrow(popupMessageText, Priority.SOMETIMES);
+        VBox.setVgrow(popupButton, Priority.NEVER);
 
-        marketMapCanvas.getGraphicsContext2D().setFill(MAP_MARKETCOLOR_BASE);
-        if (gameState.get() != null && gameState.get().getCurrentMarket().getValue() == marketNW)
-            marketMapCanvas.getGraphicsContext2D().setFill(MAP_MARKETCOLOR_HIGHLIGHT);
-        marketMapCanvas.getGraphicsContext2D().fillOval(
-                MAP_COORD_MARKET_NEAR,
-                MAP_COORD_MARKET_NEAR,
-                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
-        marketMapCanvas.getGraphicsContext2D().setFill(MAP_MARKETCOLOR_BASE);
-        if (gameState.get() != null && gameState.get().getCurrentMarket().getValue() == marketNE)
-            marketMapCanvas.getGraphicsContext2D().setFill(MAP_MARKETCOLOR_HIGHLIGHT);
-        marketMapCanvas.getGraphicsContext2D().fillOval(
-                MAP_COORD_MARKET_FAR,
-                MAP_COORD_MARKET_NEAR,
-                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
-        marketMapCanvas.getGraphicsContext2D().setFill(MAP_MARKETCOLOR_BASE);
-        if (gameState.get() != null && gameState.get().getCurrentMarket().getValue() == marketSW)
-            marketMapCanvas.getGraphicsContext2D().setFill(MAP_MARKETCOLOR_HIGHLIGHT);
-        marketMapCanvas.getGraphicsContext2D().fillOval(
-                MAP_COORD_MARKET_NEAR,
-                MAP_COORD_MARKET_FAR,
-                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
-        marketMapCanvas.getGraphicsContext2D().setFill(MAP_MARKETCOLOR_BASE);
-        if (gameState.get() != null && gameState.get().getCurrentMarket().getValue() == marketSE)
-            marketMapCanvas.getGraphicsContext2D().setFill(MAP_MARKETCOLOR_HIGHLIGHT);
-        marketMapCanvas.getGraphicsContext2D().fillOval(
-                MAP_COORD_MARKET_FAR,
-                MAP_COORD_MARKET_FAR,
-                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        popupVBox.setAlignment(Pos.CENTER);
+        popupMessageText.setTextAlignment(TextAlignment.CENTER);
 
-        marketMapCanvas.getGraphicsContext2D().strokeOval(
-                MAP_COORD_MARKET_NEAR,
-                MAP_COORD_MARKET_NEAR,
-                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
-        marketMapCanvas.getGraphicsContext2D().strokeOval(
-                MAP_COORD_MARKET_FAR,
-                MAP_COORD_MARKET_NEAR,
-                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
-        marketMapCanvas.getGraphicsContext2D().strokeOval(
-                MAP_COORD_MARKET_NEAR,
-                MAP_COORD_MARKET_FAR,
-                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
-        marketMapCanvas.getGraphicsContext2D().strokeOval(
-                MAP_COORD_MARKET_FAR,
-                MAP_COORD_MARKET_FAR,
-                MAP_MARKETDIAMETER, MAP_MARKETDIAMETER);
+        popupButton.setText(TAG_BUTTON_POPUP);
     }
+
+    private void linkUIToDataModel() {
+        marketInventoryTableView.setItems(marketInventoryList);
+        playerInventoryTableView.setItems(playerInventoryList);
+        balanceLabel.textProperty().bind(StringBinding.stringExpression(playerBalance).concat(TAG_BALANCECURRENCY));
+        cargoSpaceLabel.textProperty().bind(
+                StringBinding.stringExpression(playerCargoSpace)
+                        .concat(TAG_CARGOSPACESEPARATOR)
+                        .concat(playerMaxCargoSpace));
+        fuelLabel.textProperty().bind(StringBinding.stringExpression(playerFuel));
+        winBalanceLabel.textProperty().bind(StringBinding.stringExpression(winBalance));
+
+        marketNameTableColumn.setCellValueFactory(entry -> entry.getValue().getName());
+        marketPriceTableColumn.setCellValueFactory(entry -> entry.getValue().getPrice());
+        marketSizeTableColumn.setCellValueFactory(entry -> entry.getValue().getSize());
+        marketCountTableColumn.setCellValueFactory(entry -> entry.getValue().getCount());
+        playerNameTableColumn.setCellValueFactory(entry -> entry.getValue().getName());
+        playerPriceTableColumn.setCellValueFactory(entry -> entry.getValue().getPrice());
+        playerSizeTableColumn.setCellValueFactory(entry -> entry.getValue().getSize());
+        playerCountTableColumn.setCellValueFactory(entry -> entry.getValue().getCount());
+    }
+
+    private void linkPopupToDataModel() {
+        popupStage.titleProperty().bind(popupTitle);
+        popupMessageText.textProperty().bind(popupMessage);
+    }
+
+    private void setUIListeners() {
+        marketInventoryTableView.setRowFactory(param -> new TableRow<>() {{
+            setOnMouseClicked(GuiImpl.this::onMarketInventoryRowClicked);
+        }});
+        playerInventoryTableView.setRowFactory(param -> new TableRow<>() {{
+            setOnMouseClicked(GuiImpl.this::onPlayerInventoryRowClicked);
+        }});
+
+        saveButton.setOnAction(this::onSaveButtonClicked);
+        loadButton.setOnAction(this::onLoadButtonClicked);
+        exitButton.setOnAction(this::onExitButtonClicked);
+
+        marketMapCanvas.setOnMouseClicked(this::onMapClicked);
+
+        primaryStage.setOnCloseRequest((event) -> {
+            event.consume();
+            exitButton.fire();
+        });
+    }
+
+    private void setPopupListeners() {
+        popupButton.setOnAction(this::onPopupButtonClicked);
+        popupStage.setOnCloseRequest(event -> popupButton.fire());
+    }
+    //endregion
+
+    //endregion
 }
