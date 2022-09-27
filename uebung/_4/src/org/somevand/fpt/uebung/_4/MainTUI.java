@@ -1,10 +1,11 @@
 package org.somevand.fpt.uebung._4;
 
 import org.somevand.fpt.uebung._4.data.Ware;
-import org.somevand.fpt.uebung._4.data.basic.GameState;
-import org.somevand.fpt.uebung._4.data.basic.Market;
-import org.somevand.fpt.uebung._4.data.basic.Player;
-import org.somevand.fpt.uebung._4.data.serde.BinarySerde;
+import org.somevand.fpt.uebung._4.impl.data.basic.GameState;
+import org.somevand.fpt.uebung._4.impl.data.basic.Market;
+import org.somevand.fpt.uebung._4.impl.data.basic.Player;
+import org.somevand.fpt.uebung._4.impl.serde.BinarySerde;
+import org.somevand.fpt.uebung._4.impl.tui.TuiGameController;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class MainTUI {
         Player player = new Player(30, 200, wares);
 
         GameState gameState = new GameState(wares, mdm, player, dinslaken, 1000);
-        GameController controller = new GameController(new BinarySerde<>(GameState.class), gameState);
+        TuiGameController controller = new TuiGameController(new BinarySerde<>(GameState.class), gameState);
         controller.run();
     }
 }

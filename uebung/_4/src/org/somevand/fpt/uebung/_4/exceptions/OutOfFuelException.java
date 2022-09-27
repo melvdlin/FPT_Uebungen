@@ -12,7 +12,7 @@ public class OutOfFuelException extends GameException {
     @Override
     public String getMessage() {
         return
-                "Not enough fuel to travel the required distance " +
+                "Not enough fuel to travel the required distance" +
                 " (required: " + required + "; available: " + available + ")";
     }
 }

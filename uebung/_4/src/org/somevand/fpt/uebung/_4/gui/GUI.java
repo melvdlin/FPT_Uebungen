@@ -8,7 +8,6 @@ public interface GUI {
     void show();
     void hide();
     void exit();
-    void update();
     void showPopup(String title, String msg, Callback<Void, Void> onConfirmedListener);
     void showPopupAndWait(String title, String msg);
 
