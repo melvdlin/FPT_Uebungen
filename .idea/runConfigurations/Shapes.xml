@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Shapes" type="Application" factoryName="Application" folderName="uebungsieben">
+    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.uebung._7.Main" />
+    <module name="_7" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
