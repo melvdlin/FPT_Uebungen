@@ -38,12 +38,20 @@ public class GameStateBean implements Serializable {
         this.wares = wares;
     }
 
+    public void setWares(int index, WareBean ware) {
+        this.wares[index] = ware;
+    }
+
     public MarketBean[] getMarkets() {
         return markets;
     }
 
     public void setMarkets(MarketBean[] markets) {
         this.markets = markets;
+    }
+
+    public void setMarkets(int index, MarketBean market) {
+        this.markets[index] = market;
     }
 
     public PlayerBean getPlayer() {
@@ -60,6 +68,10 @@ public class GameStateBean implements Serializable {
 
     public void setMarketDistanceMatrix(int[] marketDistanceMatrix) {
         this.marketDistanceMatrix = marketDistanceMatrix;
+    }
+
+    public void setMarketDistanceMatrix(int index, int distance) {
+        this.marketDistanceMatrix[index] = distance;
     }
 
     public int getCurrentMarket() {

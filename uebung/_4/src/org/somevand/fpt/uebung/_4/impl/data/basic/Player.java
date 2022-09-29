@@ -4,12 +4,16 @@ import org.somevand.fpt.uebung._4.data.Ware;
 import org.somevand.fpt.uebung._4.exceptions.*;
 import org.somevand.fpt.uebung._4.tui.DisplayablePlayer;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Player implements DisplayablePlayer, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final Map<Ware, Integer> inventory;
     private final int maxCapacity;
     private int balance;

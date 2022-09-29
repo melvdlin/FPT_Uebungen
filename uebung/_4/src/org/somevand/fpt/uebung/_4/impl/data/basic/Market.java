@@ -5,12 +5,16 @@ import org.somevand.fpt.uebung._4.exceptions.OutOfWareException;
 import org.somevand.fpt.uebung._4.exceptions.UnknownWareException;
 import org.somevand.fpt.uebung._4.tui.DisplayableMarket;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class Market implements DisplayableMarket, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final String name;
     private final Map<Ware, Integer> priceMultipliers;
     private final Map<Ware, Integer> inventory;

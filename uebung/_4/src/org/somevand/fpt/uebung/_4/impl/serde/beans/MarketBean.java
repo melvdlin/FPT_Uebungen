@@ -33,11 +33,19 @@ public class MarketBean implements Serializable {
         this.inventory = inventory;
     }
 
+    public void setInventory(int index, int count) {
+        this.inventory[index] = count;
+    }
+
     public int[] getPriceMultipliers() {
         return priceMultipliers;
     }
 
     public void setPriceMultipliers(int[] priceMultipliers) {
         this.priceMultipliers = priceMultipliers;
+    }
+
+    public void setPriceMutlipliers(int index, int multiplier) {
+        this.priceMultipliers[index] = multiplier;
     }
 }

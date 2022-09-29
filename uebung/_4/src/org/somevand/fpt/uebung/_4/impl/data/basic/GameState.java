@@ -6,6 +6,7 @@ import org.somevand.fpt.uebung._4.exceptions.UnknownWareException;
 import org.somevand.fpt.uebung._4.tui.DisplayableGameState;
 import org.somevand.fpt.uebung._4.tui.DisplayableMarket;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class GameState implements DisplayableGameState, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final List<Ware> wares;
     private final Map<String, Ware> waresByName;
     private final List<Market> markets;

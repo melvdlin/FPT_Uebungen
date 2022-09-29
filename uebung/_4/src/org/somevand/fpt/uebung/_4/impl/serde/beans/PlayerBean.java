@@ -25,6 +25,10 @@ public class PlayerBean implements Serializable {
         this.inventory = inventory;
     }
 
+    public void setInventory(int index, int count) {
+        this.inventory[index] = count;
+    }
+
     public int getMaxCapactiy() {
         return maxCapactiy;
     }
