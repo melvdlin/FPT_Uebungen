@@ -6,8 +6,7 @@ public class Wheel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private int diameter = 0;
-
+    private int diameter;
 
     public Wheel(int diameter) {
         this.diameter = diameter;

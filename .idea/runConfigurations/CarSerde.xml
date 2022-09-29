@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CarSerde" type="Application" factoryName="Application" folderName="uebungfuenf">
+    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.uebung._5.Main" />
+    <module name="_5" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

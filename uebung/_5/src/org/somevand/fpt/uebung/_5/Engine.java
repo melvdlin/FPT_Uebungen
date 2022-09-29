@@ -10,24 +10,15 @@ public class Engine implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private double size;
-    private List<Piston> pistonList;
+    private ArrayList<Piston> pistonList;
 
-    public Engine() {
+    private Engine() {
         pistonList = new ArrayList<>();
     }
 
-    public Engine(double size) {
+    public Engine(double size, Collection<Piston> pistons) {
         this();
         this.size = size;
-    }
-
-    public Engine(Collection<Piston> pistons) {
-        this();
-        this.pistonList.addAll(pistons);
-    }
-
-    public Engine(double size, Collection<Piston> pistons) {
-        this(size);
         this.pistonList.addAll(pistons);
     }
 
@@ -52,6 +43,6 @@ public class Engine implements Serializable {
     @Serial
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         this.size = ois.readDouble();
-        this.pistonList = (List<Piston>) ois.readObject();
+        this.pistonList = (ArrayList<Piston>) ois.readObject();
     }
 }

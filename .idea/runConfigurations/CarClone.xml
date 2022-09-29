@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CarClone" type="Application" factoryName="Application" folderName="uebungsechs">
+    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.uebung._6.Main" />
+    <module name="_6" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

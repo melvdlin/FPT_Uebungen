@@ -1,14 +1,11 @@
-package org.somevand.fpt.uebung._5;
+package org.somevand.fpt.uebung._6;
 
-import org.somevand.fpt.uebung._5.beans.CarBean;
+import org.somevand.fpt.uebung._6.beans.CarBean;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-public class Car implements Vehicle, Serializable {
+public class Car implements Vehicle, Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -42,9 +39,19 @@ public class Car implements Vehicle, Serializable {
         );
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Car(Car other) {
+        this();
+        this.id = other.id;
+        this.model = other.model;
+        this.engine = new Engine(other.engine);
+        this.seatList = new ArrayList<>(other.seatList);
+        for (int i = 0; i < this.seatList.size(); ++i) {
+            this.seatList.set(i, new Seat(this.seatList.get(i)));
+        }
+        this.wheelList = new ArrayList<>(other.wheelList);
+        for (int i = 0; i < this.wheelList.size(); ++i) {
+            this.wheelList.set(i, new Wheel(this.wheelList.get(i)));
+        }
     }
 
     @Override
@@ -97,5 +104,33 @@ public class Car implements Vehicle, Serializable {
         this.engine = (Engine) ois.readObject();
         this.seatList = (ArrayList<Seat>) ois.readObject();
         this.wheelList = (ArrayList<Wheel>) ois.readObject();
+    }
+
+    @Override
+    protected Car clone() throws CloneNotSupportedException {
+        var clone = (Car) super.clone();
+        clone.engine = clone.engine.clone();
+        clone.seatList = (ArrayList<Seat>) clone.seatList.clone();
+        for (int i = 0; i < clone.seatList.size(); ++i) {
+            clone.seatList.set(i, clone.seatList.get(i).clone());
+        }
+        clone.wheelList = (ArrayList<Wheel>) clone.wheelList.clone();
+        for (int i = 0; i < clone.wheelList.size(); ++i) {
+            clone.wheelList.set(i, clone.wheelList.get(i).clone());
+        }
+        return clone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return id == car.id && Objects.equals(model, car.model) && Objects.equals(engine, car.engine) && Objects.equals(seatList, car.seatList) && Objects.equals(wheelList, car.wheelList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, model, engine, seatList, wheelList);
     }
 }
