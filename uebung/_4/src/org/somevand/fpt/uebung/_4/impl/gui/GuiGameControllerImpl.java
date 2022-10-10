@@ -138,31 +138,29 @@ public class GuiGameControllerImpl implements GuiGameController {
 
     // region listeners
 
-    private Void onSaveButtonClicked(String path) {
+    private void onSaveButtonClicked(String path) {
         try {
             serde.serialize(BeanHelper.encode(state.getValue().getData()), path);
         } catch (IOException e) {
             gui.showPopup("Warning", "Serialisation failed!", null);
         }
-        return null;
     }
 
-    private Void onLoadButtonClicked(String path) {
+    private void onLoadButtonClicked(String path) {
         try {
             state.setValue(new ObservableGameState(BeanHelper.decode(serde.deserialize(path))));
             gui.setState(state.getValue());
         } catch (IOException | ClassNotFoundException e) {
             gui.showPopup("Warning", "Serialisation failed!", null);
         }
-        return null;
     }
 
-    private Void onExitButtonClicked(Void param) {
+    private void onExitButtonClicked() {
         gui.exit();
-        return null;
+        ;
     }
 
-    private Void onMarketClicked(GuiDisplayableMarket market) {
+    private void onMarketClicked(GuiDisplayableMarket market) {
         try {
             if (!(market instanceof ObservableMarket to))
                 throw new UnknownMarketException(market.getName());
@@ -172,10 +170,9 @@ public class GuiGameControllerImpl implements GuiGameController {
         } catch (UnknownMarketException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
-    private Void onMarketWareClicked(Ware ware) {
+    private void onMarketWareClicked(Ware ware) {
         try {
             var pm = state.getValue().getCurrentMarket().getValue().getPriceMultiplier(ware);
             state.getValue().getPlayer().checkCanBuy(ware, 1, pm);
@@ -189,10 +186,9 @@ public class GuiGameControllerImpl implements GuiGameController {
         } catch (UnknownWareException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
-    private Void onPlayerWareClicked(Ware ware) {
+    private void onPlayerWareClicked(Ware ware) {
         try {
             var pm = state.getValue().getCurrentMarket().getValue().getPriceMultiplier(ware);
             state.getValue().getPlayer().checkCanSell(ware, 1);
@@ -204,7 +200,6 @@ public class GuiGameControllerImpl implements GuiGameController {
         } catch (UnknownWareException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     private void winListener(Observable observable, Number oldValue, Number newValue) {

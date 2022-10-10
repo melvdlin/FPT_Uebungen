@@ -3,24 +3,26 @@ package org.somevand.fpt.uebung._4.gui;
 import javafx.util.Callback;
 import org.somevand.fpt.uebung._4.data.Ware;
 
+import java.util.function.Consumer;
+
 public interface GUI {
     void setState(GuiDisplayableGameState state);
     void show();
     void hide();
     void exit();
-    void showPopup(String title, String msg, Callback<Void, Void> onConfirmedListener);
+    void showPopup(String title, String msg, Runnable onConfirmedListener);
     void showPopupAndWait(String title, String msg);
 
-    void addOnMarketClickedListener(Callback<GuiDisplayableMarket, Void> listener);
-    void removeOnMarketClickedListener(Callback<GuiDisplayableMarket, Void> listener);
-    void addOnMarketWareClickedListener(Callback<Ware, Void> listener);
-    void removeOnMarketWareClickedListener(Callback<Ware, Void> listener);
-    void addOnPlayerWareClickedListener(Callback<Ware, Void> listener);
-    void removeOnPlayerWareClickedListener(Callback<Ware, Void> listener);
-    void addOnSaveButtonClickedListener(Callback<String, Void> listener);
-    void removeOnSaveButtonClickedListener(Callback<String, Void> listener);
-    void addOnLoadButtonClickedListener(Callback<String, Void> listener);
-    void removeOnLoadButtonClickedListener(Callback<String, Void> listener);
-    void addOnExitButtonClickedListener(Callback<Void, Void> listener);
-    void removeOnExitButtonClickedListener(Callback<Void, Void> listener);
+    void addOnMarketClickedListener(Consumer<GuiDisplayableMarket> listener);
+    void removeOnMarketClickedListener(Consumer<GuiDisplayableMarket> listener);
+    void addOnMarketWareClickedListener(Consumer<Ware> listener);
+    void removeOnMarketWareClickedListener(Consumer<Ware> listener);
+    void addOnPlayerWareClickedListener(Consumer<Ware> listener);
+    void removeOnPlayerWareClickedListener(Consumer<Ware> listener);
+    void addOnSaveButtonClickedListener(Consumer<String> listener);
+    void removeOnSaveButtonClickedListener(Consumer<String> listener);
+    void addOnLoadButtonClickedListener(Consumer<String> listener);
+    void removeOnLoadButtonClickedListener(Consumer<String> listener);
+    void addOnExitButtonClickedListener(Runnable listener);
+    void removeOnExitButtonClickedListener(Runnable listener);
 }

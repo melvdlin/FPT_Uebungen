@@ -34,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class GuiImpl extends Application implements GUI {
     //region constants
@@ -169,16 +170,16 @@ public class GuiImpl extends Application implements GUI {
     //endregion
 
     //region user configurable listeners
-    private final List<Callback<GuiDisplayableMarket, Void>> marketClickedListeners = new LinkedList<>();
-    private final List<Callback<Ware, Void>> marketWareClickedListeners = new LinkedList<>();
-    private final List<Callback<Ware, Void>> playerWareClickedListeners = new LinkedList<>();
-    private final List<Callback<String, Void>> saveButtonClickedListeners = new LinkedList<>();
-    private final List<Callback<String, Void>> loadButtonClickedListeners = new LinkedList<>();
-    private final List<Callback<Void, Void>> exitButtonClickedListeners = new LinkedList<>();
+    private final List<Consumer<GuiDisplayableMarket>> marketClickedListeners = new LinkedList<>();
+    private final List<Consumer<Ware>> marketWareClickedListeners = new LinkedList<>();
+    private final List<Consumer<Ware>> playerWareClickedListeners = new LinkedList<>();
+    private final List<Consumer<String>> saveButtonClickedListeners = new LinkedList<>();
+    private final List<Consumer<String>> loadButtonClickedListeners = new LinkedList<>();
+    private final List<Runnable> exitButtonClickedListeners = new LinkedList<>();
     //endregion
 
     //region popup listeners
-    private Callback<Void, Void> popupButtonClickedListener = null;
+    private Runnable popupButtonClickedListener = null;
     //endregion
 
     //region stages and scenes
@@ -329,7 +330,7 @@ public class GuiImpl extends Application implements GUI {
 
 
     @Override
-    public void showPopup(String title, String msg, Callback<Void, Void> onConfirmedListener) {
+    public void showPopup(String title, String msg, Runnable onConfirmedListener) {
         updatePopup(title, msg, onConfirmedListener);
         popupStage.show();
     }
@@ -343,62 +344,62 @@ public class GuiImpl extends Application implements GUI {
 
     //region user configurable listener management methods
     @Override
-    public void addOnMarketClickedListener(Callback<GuiDisplayableMarket, Void> listener) {
+    public void addOnMarketClickedListener(Consumer<GuiDisplayableMarket> listener) {
         marketClickedListeners.add(listener);
     }
 
     @Override
-    public void removeOnMarketClickedListener(Callback<GuiDisplayableMarket, Void> listener) {
+    public void removeOnMarketClickedListener(Consumer<GuiDisplayableMarket> listener) {
         marketClickedListeners.remove(listener);
     }
 
     @Override
-    public void addOnMarketWareClickedListener(Callback<Ware, Void> listener) {
+    public void addOnMarketWareClickedListener(Consumer<Ware> listener) {
         marketWareClickedListeners.add(listener);
     }
 
     @Override
-    public void removeOnMarketWareClickedListener(Callback<Ware, Void> listener) {
+    public void removeOnMarketWareClickedListener(Consumer<Ware> listener) {
         marketWareClickedListeners.remove(listener);
     }
 
     @Override
-    public void addOnPlayerWareClickedListener(Callback<Ware, Void> listener) {
+    public void addOnPlayerWareClickedListener(Consumer<Ware> listener) {
         playerWareClickedListeners.add(listener);
     }
 
     @Override
-    public void removeOnPlayerWareClickedListener(Callback<Ware, Void> listener) {
+    public void removeOnPlayerWareClickedListener(Consumer<Ware> listener) {
         playerWareClickedListeners.remove(listener);
     }
 
     @Override
-    public void addOnSaveButtonClickedListener(Callback<String, Void> listener) {
+    public void addOnSaveButtonClickedListener(Consumer<String> listener) {
         saveButtonClickedListeners.add(listener);
     }
 
     @Override
-    public void removeOnSaveButtonClickedListener(Callback<String, Void> listener) {
+    public void removeOnSaveButtonClickedListener(Consumer<String> listener) {
         saveButtonClickedListeners.remove(listener);
     }
 
     @Override
-    public void addOnLoadButtonClickedListener(Callback<String, Void> listener) {
+    public void addOnLoadButtonClickedListener(Consumer<String> listener) {
         loadButtonClickedListeners.add(listener);
     }
 
     @Override
-    public void removeOnLoadButtonClickedListener(Callback<String, Void> listener) {
+    public void removeOnLoadButtonClickedListener(Consumer<String> listener) {
         loadButtonClickedListeners.remove(listener);
     }
 
     @Override
-    public void addOnExitButtonClickedListener(Callback<Void, Void> listener) {
+    public void addOnExitButtonClickedListener(Runnable listener) {
         exitButtonClickedListeners.add(listener);
     }
 
     @Override
-    public void removeOnExitButtonClickedListener(Callback<Void, Void> listener) {
+    public void removeOnExitButtonClickedListener(Runnable listener) {
         exitButtonClickedListeners.remove(listener);
     }
     //endregion
@@ -421,23 +422,23 @@ public class GuiImpl extends Application implements GUI {
 
     private void onSaveButtonClicked(ActionEvent event) {
         for (var listener : saveButtonClickedListeners)
-            listener.call(serdePathTextField.getText());
+            listener.accept(serdePathTextField.getText());
     }
 
     private void onLoadButtonClicked(ActionEvent event) {
         for (var listener : loadButtonClickedListeners)
-            listener.call(serdePathTextField.getText());
+            listener.accept(serdePathTextField.getText());
     }
 
     private void onExitButtonClicked(ActionEvent event) {
         for (var listener : exitButtonClickedListeners)
-            listener.call(null);
+            listener.run();
     }
 
     private void onMarketInventoryRowClicked(MouseEvent event) {
         if (event.getSource() instanceof TableRow<?> tr && tr.getItem() instanceof InventoryEntry entry) {
             for (var listener : marketWareClickedListeners) {
-                listener.call(entry.getWare());
+                listener.accept(entry.getWare());
             }
         }
     }
@@ -445,7 +446,7 @@ public class GuiImpl extends Application implements GUI {
     private void onPlayerInventoryRowClicked(MouseEvent event) {
         if (event.getSource() instanceof TableRow<?> tr && tr.getItem() instanceof InventoryEntry entry) {
             for (var listener : playerWareClickedListeners) {
-                listener.call(entry.getWare());
+                listener.accept(entry.getWare());
             }
         }
     }
@@ -489,14 +490,14 @@ public class GuiImpl extends Application implements GUI {
 
         if (market != null) {
             for (var listener : marketClickedListeners) {
-                listener.call(market);
+                listener.accept(market);
             }
         }
     }
 
     private void onPopupButtonClicked(ActionEvent event) {
         if (popupButtonClickedListener != null)
-            popupButtonClickedListener.call(null);
+            popupButtonClickedListener.run();
         popupStage.hide();
     }
     //endregion
@@ -548,7 +549,7 @@ public class GuiImpl extends Application implements GUI {
         }
     }
 
-    private void updatePopup(String title, String msg, Callback<Void, Void> onConfirmedListener) {
+    private void updatePopup(String title, String msg, Runnable onConfirmedListener) {
         popupTitle.set(title);
         popupMessage.set(msg);
         popupButtonClickedListener = onConfirmedListener;

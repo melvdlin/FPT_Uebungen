@@ -1,9 +1,9 @@
-package org.somevand.fpt.teaching.uebung._2;
+package org.somevand.fpt.teaching.uebung._2.inheritance;
 
-public class Penguin extends SwimmingBird {
+public class Penguin extends SwimmingBird{
 
-    public Penguin(String name, int age, float weight, float maxWaterVelocity) {
-        super(name, age, weight, maxWaterVelocity);
+    public Penguin(String name, int age, float weight, float maxWaterSpeed) {
+        super(name, age, weight, maxWaterSpeed);
     }
 
     @Override
