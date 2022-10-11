@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Taschenrechner" type="Application" factoryName="Application" folderName="uebungdrei">
-    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.uebung._3.Taschenrechner" />
-    <module name="_3" />
+    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.uebung._03.Taschenrechner" />
+    <module name="_03" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
