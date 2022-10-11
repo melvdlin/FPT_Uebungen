@@ -2,7 +2,7 @@ package org.somevand.fpt.teaching.uebung._1;
 
 public class Fibonacci {
     public static long fibLinear(long index) {
-        long retVal = 1, prev = 1, temp;
+        long retVal = 1, prev = 0, temp;
         for (long i = 1; i < index; i++) {
             temp = retVal;
             retVal += prev;
@@ -13,7 +13,8 @@ public class Fibonacci {
     }
 
     public static long fibRecursive(long index) {
-        if (index <= 1) return 1;
+        if (index < 1) return 0;
+        if (index == 1) return 1;
         return fibRecursive(index - 1) + fibRecursive(index - 2);
     }
 

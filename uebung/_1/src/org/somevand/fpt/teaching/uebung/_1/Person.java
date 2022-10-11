@@ -1,9 +1,17 @@
 package org.somevand.fpt.teaching.uebung._1;
 
 public class Person {
-    private final int age;
-    private final String firstName, lastName;
-    private final double height;
+    private int age;
+    private String firstName, lastName;
+    private double height;
+
+
+    public Person() {
+        this.age = 0;
+        this.firstName = "";
+        this.lastName = "";
+        this.height = 0.0;
+    }
 
     public Person(int age, String firstName, String lastName, double height) {
         this.age = age;
@@ -12,8 +20,36 @@ public class Person {
         this.height = height;
     }
 
-    public Person() {
-        this(22, "Max", "Mustermann", 1.90);
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
     }
 
     @Override
@@ -22,9 +58,9 @@ public class Person {
     }
 
     public static void main(String[] args) {
-        Person maxMustermann = new Person();
+        Person maxMustermann = new Person(42, "Max", "Mustermann", 1.82);
         Person maxPlanck = new Person(89, "Max", "Planck", 6.63);
-        Person adaLovelace = new Person(36, "Ada", "Lovelace", 1.65);
+        Person adaLovelace = new Person(92, "Karl", "Popper", 1.902);
 
         System.out.println(maxMustermann);
         System.out.println(maxPlanck);
