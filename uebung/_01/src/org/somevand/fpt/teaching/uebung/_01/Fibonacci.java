@@ -19,10 +19,9 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
-        long index1 = 54;
-        long index2 = 48;
-        System.out.println("fibLinear(" + index1 + ") = " + fibLinear(index1));
-        System.out.println("fibLinear(" + index2 + ") = " + fibLinear(index2));
-        System.out.println("fibRecursive(" + index2 + ") = " + fibRecursive(index2));
+        for (int i = 0; i <= 42; i++) {
+            System.out.println("fibLinear(" + i + ") = " + fibLinear(i));
+            System.out.println("fibRecursive(" + i + ") = " + fibRecursive(i));
+        }
     }
 }
