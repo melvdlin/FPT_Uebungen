@@ -1,19 +1,15 @@
 package org.somevand.fpt.teaching.uebung._03.obst;
 
 public class Apple extends AbstractFruit {
-    private boolean isOrganic;
+    private final boolean organic;
 
     public Apple(long harvestDate, double weight, Color color, String origin, boolean isOrganic) {
         super(harvestDate, weight, color, origin);
-        this.isOrganic = isOrganic;
+        this.organic = isOrganic;
     }
 
-    public boolean getIsOrganic() {
-        return isOrganic;
-    }
-
-    public void setIsOrganic(boolean isOrganic) {
-        isOrganic = isOrganic;
+    public boolean isOrganic() {
+        return organic;
     }
 
     @Override
@@ -21,10 +17,10 @@ public class Apple extends AbstractFruit {
         return
                 this == obj ||
                 obj instanceof Apple other &&
-                harvestDate == other.harvestDate &&
-                weight == other.weight &&
-                color.equals(other.color) &&
-                origin.equals(other.origin) &&
-                this.isOrganic == other.isOrganic;
+                getHarvestDate() == other.getHarvestDate() &&
+                getWeight() == other.getWeight() &&
+                getColor().equals(other.getColor()) &&
+                getOrigin().equals(other.getOrigin()) &&
+                this.organic == other.organic;
     }
 }

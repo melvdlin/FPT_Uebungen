@@ -1,10 +1,10 @@
 package org.somevand.fpt.teaching.uebung._03.obst;
 
 public abstract class AbstractFruit {
-    protected final long harvestDate;
-    protected final double weight;
-    protected final Color color;
-    protected final String origin;
+    private final long harvestDate;
+    private final double weight;
+    private final Color color;
+    private final String origin;
 
     public AbstractFruit(long harvestDate, double weight, Color color, String origin) {
         this.harvestDate = harvestDate;

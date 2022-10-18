@@ -10,9 +10,9 @@ public class Pear extends AbstractFruit {
         return
                 this == obj ||
                 obj instanceof Pear other &&
-                harvestDate == other.harvestDate &&
-                weight == other.weight &&
-                color.equals(other.color) &&
-                origin.equals(other.origin);
+                getHarvestDate() == other.getHarvestDate() &&
+                getWeight() == other.getWeight() &&
+                getColor().equals(other.getColor()) &&
+                getOrigin().equals(other.getOrigin());
     }
 }
