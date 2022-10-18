@@ -2,8 +2,9 @@ package org.somevand.fpt.teaching.uebung._01;
 
 public class Fibonacci {
     public static long fibLinear(long index) {
-        long retVal = 0, prev = 1, temp;
-        for (long i = 0; i < index; i++) {
+        if (index == 0) return 0;
+        long retVal = 1, prev = 0, temp;
+        for (long i = 1; i < index; i++) {
             temp = retVal;
             retVal += prev;
             prev = temp;
