@@ -2,7 +2,7 @@ package org.somevand.fpt.teaching.uebung._01;
 
 public class Fibonacci {
     public static long fibLinear(long index) {
-        if (index == 0) return 0;
+        if (index < 1) return 0;
         long retVal = 1, prev = 0, temp;
         for (long i = 1; i < index; i++) {
             temp = retVal;
