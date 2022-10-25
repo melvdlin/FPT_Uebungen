@@ -1,4 +1,4 @@
-package org.somevand.fpt.teaching.uebung._03.taschenrechner;
+package org.somevand.fpt.teaching.uebung._03_old.taschenrechner;
 import java.util.*;
 
 public class Taschenrechner {

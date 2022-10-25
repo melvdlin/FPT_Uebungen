@@ -1,4 +1,4 @@
-package org.somevand.fpt.teaching.uebung._03.obst;
+package org.somevand.fpt.teaching.uebung._03_old.obst;
 
 public class Pear extends AbstractFruit {
     public Pear(long harvestDate, double weight, Color color, String origin) {

@@ -1,4 +1,4 @@
-package org.somevand.fpt.teaching.uebung._03.obst;
+package org.somevand.fpt.teaching.uebung._03_old.obst;
 
 public class Apple extends AbstractFruit {
     private final boolean organic;
