@@ -1,7 +1,5 @@
 package org.somevand.fpt.teaching.uebung._03.employees;
 
-import java.time.LocalDateTime;
-
 public class EmployeeID {
 
     private static int employeeCount = 0;
@@ -9,19 +7,21 @@ public class EmployeeID {
     private String firstName;
     private String lastName;
     private Address address;
-    private final LocalDateTime dateOfBirth;;
-    private final int uid;
+    private final Birthday dateOfBirth;;
+    private SecurityAccessLevel accessLevel;
+    private final int UID;
 
-    EmployeeID(String firstName, String lastName, Address address, LocalDateTime dateOfBirth) {
+    EmployeeID(String firstName, String lastName, Address address, Birthday dateOfBirth, SecurityAccessLevel accessLevel) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.dateOfBirth = dateOfBirth;
-        this.uid = employeeCount++;
+        this.accessLevel = accessLevel;
+        this.UID = employeeCount++;
     }
 
-    public EmployeeID create(String firstName, String lastName, Address address, LocalDateTime dateOfBirth) {
-        return new EmployeeID(firstName, lastName, address, dateOfBirth);
+    public EmployeeID create(String firstName, String lastName, Address address, Birthday dateOfBirth, SecurityAccessLevel accessLevel) {
+        return new EmployeeID(firstName, lastName, address, dateOfBirth, accessLevel);
     }
 
     public String getFirstName() {
@@ -36,12 +36,16 @@ public class EmployeeID {
         return address;
     }
 
-    public LocalDateTime getDateOfBirth() {
+    public Birthday getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public int getUid() {
-        return uid;
+    public SecurityAccessLevel getAccessLevel() {
+        return accessLevel;
+    }
+
+    public int getUID() {
+        return UID;
     }
 
     public void setFirstName(String firstName) {
@@ -54,5 +58,9 @@ public class EmployeeID {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public void setAccessLevel(SecurityAccessLevel accessLevel) {
+        this.accessLevel = accessLevel;
     }
 }
