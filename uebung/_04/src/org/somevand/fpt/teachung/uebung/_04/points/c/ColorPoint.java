@@ -22,7 +22,7 @@ public class ColorPoint extends Point {
                 == o
                 || o instanceof ColorPoint other
                 && super.equals(other)
-                && color == other.color;
+                && color.equals(other.color);
     }
 
     @Override

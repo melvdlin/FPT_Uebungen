@@ -1,13 +1,18 @@
-package org.somevand.fpt.teachung.uebung._04.points.b;
+package org.somevand.fpt.teachung.uebung._04.points.d;
 
 import java.util.Objects;
 
-public class ColorPoint extends Point {
-
+public class ColorPoint {
+    private final Point point;
     private final Color color;
+
     public ColorPoint(int x, int y, Color color) {
-        super(x, y);
+        this.point = new Point(x, y);
         this.color = color;
+    }
+
+    public Point getPoint() {
+        return point;
     }
 
     public Color getColor() {
@@ -21,8 +26,8 @@ public class ColorPoint extends Point {
         return this
                 == o
                 || o instanceof ColorPoint other
-                && super.equals(other)
-                && color.equals(other.color);
+                && point.equals(other.getPoint())
+                && color.equals(other.getColor());
     }
 
     @Override
