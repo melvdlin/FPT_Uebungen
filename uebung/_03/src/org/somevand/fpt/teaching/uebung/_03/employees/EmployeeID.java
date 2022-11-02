@@ -11,17 +11,13 @@ public class EmployeeID {
     private SecurityAccessLevel accessLevel;
     private final int UID;
 
-    EmployeeID(String firstName, String lastName, Address address, Birthday dateOfBirth, SecurityAccessLevel accessLevel) {
+    public EmployeeID(String firstName, String lastName, Address address, Birthday dateOfBirth, SecurityAccessLevel accessLevel) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.dateOfBirth = dateOfBirth;
         this.accessLevel = accessLevel;
         this.UID = employeeCount++;
-    }
-
-    public EmployeeID create(String firstName, String lastName, Address address, Birthday dateOfBirth, SecurityAccessLevel accessLevel) {
-        return new EmployeeID(firstName, lastName, address, dateOfBirth, accessLevel);
     }
 
     public String getFirstName() {
