@@ -11,11 +11,9 @@ public class SecuritySystem {
         accessMap = new HashMap<>();
     }
 
-    public static SecuritySystem create(EmployeeID... employees) {
-        var securitySystem = new SecuritySystem();
-        securitySystem.employees.addAll(Arrays.asList(employees));
-
-        return securitySystem;
+    public SecuritySystem(EmployeeID... employees) {
+        this();
+        this.employees.addAll(Arrays.asList(employees));
     }
 
     public void addEmployee(EmployeeID employee) {
@@ -44,10 +42,11 @@ public class SecuritySystem {
                 return employee;
             }
         }
+
         return null;
     }
 
-    public boolean canAccess(EmployeeID employee, String area) {
+    public boolean hasAccess(EmployeeID employee, String area) {
         return isEmployed(employee) &&
                 accessMap.containsKey(area) &&
                 accessMap.get(area).ordinal() <= employee.getAccessLevel().ordinal();
