@@ -1,6 +1,6 @@
 package org.somevand.fpt.teaching.uebung._02.f;
 
-public class Penguin extends Bird implements SwimBehaviour {
+public class Penguin extends Bird implements SwimmingEntity {
     private float maxWaterSpeed;
 
     public Penguin(String name, int age, float weight, float maxWaterSpeed) {

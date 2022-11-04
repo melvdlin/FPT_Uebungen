@@ -1,6 +1,6 @@
 package org.somevand.fpt.teaching.uebung._02.f;
 
-public class Seagull extends Bird implements FlyBehaviour {
+public class Seagull extends Bird implements FlyingEntity {
     private float maxAirSpeed;
 
     public Seagull(String name, int age, float weight, float maxAirSpeed) {

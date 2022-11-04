@@ -1,6 +1,6 @@
 package org.somevand.fpt.teaching.uebung._02.f;
 
-public class Puffin extends Bird implements FlyBehaviour, SwimBehaviour {
+public class Puffin extends Bird implements FlyingEntity, SwimmingEntity {
     private float maxAirSpeed;
     private float maxWaterSpeed;
 
