@@ -6,7 +6,7 @@ public class Birthday {
     private final Month month;
     private final int day;
 
-    private Birthday(int year, Month month, int day) {
+    public Birthday(int year, Month month, int day) {
         if (!isValidDate(year, month, day)) {
             throw new IllegalArgumentException();
         }
