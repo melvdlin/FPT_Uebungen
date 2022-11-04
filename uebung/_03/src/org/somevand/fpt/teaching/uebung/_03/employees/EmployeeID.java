@@ -1,6 +1,6 @@
 package org.somevand.fpt.teaching.uebung._03.employees;
 
-public class EmployeeID {
+public final class EmployeeID {
 
     private static int employeeCount = 0;
 

@@ -1,6 +1,6 @@
 package org.somevand.fpt.teaching.uebung._03.employees;
 
-public class Birthday {
+public final class Birthday {
 
     private final int year;
     private final Month month;
