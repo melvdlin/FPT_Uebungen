@@ -1,6 +1,6 @@
 package org.somevand.fpt.teachung.uebung._04.birds.b;
 
-public class Eagle extends Bird implements FlyBehaviour {
+public class Eagle extends Bird implements FlyingEntity {
     private float maxAirSpeed;
 
     public Eagle(String name, int age, float weight, float maxAirSpeed) {

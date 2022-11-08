@@ -1,6 +1,6 @@
 package org.somevand.fpt.teachung.uebung._04.birds.b;
 
-public interface FlyBehaviour {
+public interface FlyingEntity {
     float getMaxAirSpeed();
 
     void setMaxAirSpeed(float maxAirSpeed);

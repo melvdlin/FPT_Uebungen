@@ -1,6 +1,6 @@
 package org.somevand.fpt.teachung.uebung._04.birds.b;
 
-public interface SwimBehaviour {
+public interface SwimmingEntity {
     float getMaxWaterSpeed();
 
     void setMaxWaterSpeed(float maxWaterSpeed);
