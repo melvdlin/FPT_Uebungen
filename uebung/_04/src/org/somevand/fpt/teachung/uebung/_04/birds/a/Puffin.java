@@ -1,28 +1,14 @@
 package org.somevand.fpt.teachung.uebung._04.birds.a;
 
-public class Puffin extends Bird implements FlyBehaviour, SwimBehaviour {
-    private float maxAirSpeed;
-    private float maxWaterSpeed;
+public class Puffin extends FlyingSwimmingBird {
 
     public Puffin(String name, int age, float weight, float maxAirSpeed, float maxWaterSpeed) {
-        super(name, age, weight);
-        this.maxAirSpeed = maxAirSpeed;
-        this.maxWaterSpeed = maxWaterSpeed;
+        super(name, age, weight, maxAirSpeed, maxWaterSpeed);
     }
 
     @Override
     public void eatFood() {
         System.out.println("I eat fish.");
-    }
-
-    @Override
-    public float getMaxAirSpeed() {
-        return maxAirSpeed;
-    }
-
-    @Override
-    public void setMaxAirSpeed(float maxAirSpeed) {
-        this.maxAirSpeed = maxAirSpeed;
     }
 
     @Override
@@ -38,16 +24,6 @@ public class Puffin extends Bird implements FlyBehaviour, SwimBehaviour {
     @Override
     public void land() {
         System.out.println("I am landing on the shore");
-    }
-
-    @Override
-    public float getMaxWaterSpeed() {
-        return this.maxWaterSpeed;
-    }
-
-    @Override
-    public void setMaxWaterSpeed(float maxWaterSpeed) {
-        this.maxWaterSpeed = maxWaterSpeed;
     }
 
     @Override

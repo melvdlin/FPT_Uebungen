@@ -1,26 +1,67 @@
 package org.somevand.fpt.teachung.uebung._04.birds.b;
 
-public class Puffin extends Bird implements FlyingEntity, SwimmingEntity {
+public class Puffin extends Bird implements FlyBehaviour, SwimBehaviour {
+    private float maxAirSpeed;
+    private float maxWaterSpeed;
 
-    private final FlyBehaviour flyBehaviour = new SoaringFlight(88.5F);
-    private final SwimBehaviour swimBehaviour = new UnderwaterFlight(16.1F);
-
-    public Puffin(String name, int age, float weight) {
+    public Puffin(String name, int age, float weight, float maxAirSpeed, float maxWaterSpeed) {
         super(name, age, weight);
+        this.maxAirSpeed = maxAirSpeed;
+        this.maxWaterSpeed = maxWaterSpeed;
     }
 
     @Override
     public void eatFood() {
-        System.out.println("I eat fish");
+        System.out.println("I eat fish.");
     }
 
     @Override
-    public FlyBehaviour getFlyBehaviour() {
-        return flyBehaviour;
+    public float getMaxAirSpeed() {
+        return maxAirSpeed;
     }
 
     @Override
-    public SwimBehaviour getSwimBehaviour() {
-        return swimBehaviour;
+    public void setMaxAirSpeed(float maxAirSpeed) {
+        this.maxAirSpeed = maxAirSpeed;
+    }
+
+    @Override
+    public void fly() {
+        System.out.println("I am flying over the water");
+    }
+
+    @Override
+    public void liftOff() {
+        System.out.println("I am lifting off the shore");
+    }
+
+    @Override
+    public void land() {
+        System.out.println("I am landing on the shore");
+    }
+
+    @Override
+    public float getMaxWaterSpeed() {
+        return this.maxWaterSpeed;
+    }
+
+    @Override
+    public void setMaxWaterSpeed(float maxWaterSpeed) {
+        this.maxWaterSpeed = maxWaterSpeed;
+    }
+
+    @Override
+    public void swim() {
+        System.out.println("I am swimming through the water");
+    }
+
+    @Override
+    public void jumpIntoWater() {
+        System.out.println("I am diving into the water");
+    }
+
+    @Override
+    public void leaveWater() {
+        System.out.println("I am leaving the water");
     }
 }

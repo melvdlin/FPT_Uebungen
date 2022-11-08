@@ -1,21 +1,9 @@
 package org.somevand.fpt.teachung.uebung._04.birds.a;
 
-public class Penguin extends Bird implements SwimBehaviour {
-    private float maxWaterSpeed;
+public class Penguin extends SwimmingBird{
 
     public Penguin(String name, int age, float weight, float maxWaterSpeed) {
-        super(name, age, weight);
-        this.maxWaterSpeed = maxWaterSpeed;
-    }
-
-    @Override
-    public float getMaxWaterSpeed() {
-        return maxWaterSpeed;
-    }
-
-    @Override
-    public void setMaxWaterSpeed(float maxWaterSpeed) {
-        this.maxWaterSpeed = maxWaterSpeed;
+        super(name, age, weight, maxWaterSpeed);
     }
 
     @Override

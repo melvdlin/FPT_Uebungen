@@ -1,21 +1,9 @@
 package org.somevand.fpt.teachung.uebung._04.birds.a;
 
-public class Seagull extends Bird implements FlyBehaviour {
-    private float maxAirSpeed;
+public class Seagull extends FlyingBird {
 
     public Seagull(String name, int age, float weight, float maxAirSpeed) {
-        super(name, age, weight);
-        this.maxAirSpeed = maxAirSpeed;
-    }
-
-    @Override
-    public float getMaxAirSpeed() {
-        return maxAirSpeed;
-    }
-
-    @Override
-    public void setMaxAirSpeed(float maxAirSpeed) {
-        this.maxAirSpeed = maxAirSpeed;
+        super(name, age, weight, maxAirSpeed);
     }
 
     @Override
