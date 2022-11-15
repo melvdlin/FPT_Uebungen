@@ -1,4 +1,4 @@
-package exceptions;
+package org.somevand.fpt.teaching.uebung._05.exceptions;
 
 import java.io.IOException;
 import java.nio.file.Files;

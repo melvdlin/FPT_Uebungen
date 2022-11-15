@@ -1,6 +1,7 @@
-package comparisons.comparators_lambda;
+package org.somevand.fpt.teaching.uebung._05.comparisons.comparators_anonymous;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main {
@@ -14,14 +15,20 @@ public class Main {
                 new Person("Papula", "Lothar", 79, 1.91)
         ));
 
+        Comparator<Person> firstNameComparator = new Comparator<>() {
+            @Override
+            public int compare(Person p1, Person p2) {
+                if (p1 == p2) return 0;
+                if (p1 == null) return -1;
+                if (p2 == null) return 1;
+                return p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
+            }
+        };
+
         persons.forEach(System.out::println);
         System.out.println();
 
-        persons.sort((p1, p2) -> Double.compare(p1.getHeight(), p2.getHeight()));
-        persons.forEach(System.out::println);
-        System.out.println();
-
-        persons.sort((p1, p2) -> p1.getLastName().compareToIgnoreCase(p2.getLastName()));
+        persons.sort(firstNameComparator);
         persons.forEach(System.out::println);
         System.out.println();
     }

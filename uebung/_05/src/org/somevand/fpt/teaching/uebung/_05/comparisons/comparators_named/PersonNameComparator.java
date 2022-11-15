@@ -1,4 +1,4 @@
-package comparisons.comparators_named;
+package org.somevand.fpt.teaching.uebung._05.comparisons.comparators_named;
 
 import java.util.Comparator;
 

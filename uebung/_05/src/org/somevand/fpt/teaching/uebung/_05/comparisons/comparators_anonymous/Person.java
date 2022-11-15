@@ -1,8 +1,8 @@
-package comparisons.comparators_lambda;
+package org.somevand.fpt.teaching.uebung._05.comparisons.comparators_anonymous;
 
 import java.util.Objects;
 
-class Person {
+public class Person {
     private final String lastName, firstName;
     private final int age;
     private final double height;

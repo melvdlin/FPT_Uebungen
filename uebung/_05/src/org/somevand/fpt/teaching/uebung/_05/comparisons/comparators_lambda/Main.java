@@ -1,4 +1,4 @@
-package comparisons.comparators_named;
+package org.somevand.fpt.teaching.uebung._05.comparisons.comparators_lambda;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,11 @@ public class Main {
         persons.forEach(System.out::println);
         System.out.println();
 
-        persons.sort(new PersonAgeComparator());
+        persons.sort((p1, p2) -> Double.compare(p1.getHeight(), p2.getHeight()));
         persons.forEach(System.out::println);
         System.out.println();
 
-        persons.sort(new PersonNameComparator());
+        persons.sort((p1, p2) -> p1.getLastName().compareToIgnoreCase(p2.getLastName()));
         persons.forEach(System.out::println);
         System.out.println();
     }
