@@ -1,5 +1,7 @@
 package org.somevand.fpt.teaching.uebung._05.comparisons.comparators_anonymous;
 
+import org.somevand.fpt.teaching.uebung._05.comparisons.param_check_requirenonnull.Person;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

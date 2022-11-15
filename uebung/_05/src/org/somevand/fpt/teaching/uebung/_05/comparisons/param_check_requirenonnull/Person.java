@@ -2,7 +2,7 @@ package org.somevand.fpt.teaching.uebung._05.comparisons.param_check_requirenonn
 
 import java.util.Objects;
 
-class Person {
+public class Person {
     private final String lastName, firstName;
     private final int age;
     private final double height;
@@ -34,5 +34,12 @@ class Person {
 
     public double getHeight() {
         return height;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%12s, %8s, age: %3d, height: %1.3fm",
+                lastName, firstName, age, height);
     }
 }

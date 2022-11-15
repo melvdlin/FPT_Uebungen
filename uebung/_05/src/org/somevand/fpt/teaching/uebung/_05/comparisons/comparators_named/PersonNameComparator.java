@@ -1,5 +1,7 @@
 package org.somevand.fpt.teaching.uebung._05.comparisons.comparators_named;
 
+import org.somevand.fpt.teaching.uebung._05.comparisons.param_check_requirenonnull.Person;
+
 import java.util.Comparator;
 
 class PersonNameComparator implements Comparator<Person> {

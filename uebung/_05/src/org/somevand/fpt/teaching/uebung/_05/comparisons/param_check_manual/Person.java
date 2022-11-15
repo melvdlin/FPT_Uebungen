@@ -1,6 +1,6 @@
 package org.somevand.fpt.teaching.uebung._05.comparisons.param_check_manual;
 
-class Person {
+public class Person {
     private final String lastName, firstName;
     private final int age;
     private final double height;
