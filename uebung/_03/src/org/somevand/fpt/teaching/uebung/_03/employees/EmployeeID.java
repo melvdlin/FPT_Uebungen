@@ -7,7 +7,7 @@ public final class EmployeeID {
     private String firstName;
     private String lastName;
     private Address address;
-    private final Birthday dateOfBirth;;
+    private final Birthday dateOfBirth;
     private SecurityAccessLevel accessLevel;
     private final int UID;
 
