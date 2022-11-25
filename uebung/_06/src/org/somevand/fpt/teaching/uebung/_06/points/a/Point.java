@@ -1,7 +1,5 @@
 package org.somevand.fpt.teaching.uebung._06.points.a;
 
-import java.util.Objects;
-
 class Point {
     private final int x, y;
 
