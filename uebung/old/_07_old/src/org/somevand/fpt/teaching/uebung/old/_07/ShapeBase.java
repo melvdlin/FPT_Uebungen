@@ -1,4 +1,4 @@
-package org.somevand.fpt.teaching.uebung._07;
+package org.somevand.fpt.teaching.uebung.old._07;
 
 public abstract class ShapeBase implements Shape {
     private int x, y;

@@ -1,4 +1,4 @@
-package org.somevand.fpt.teaching.uebung._07;
+package org.somevand.fpt.teaching.uebung.old._07;
 
 import java.util.ArrayList;
 import java.util.Arrays;
