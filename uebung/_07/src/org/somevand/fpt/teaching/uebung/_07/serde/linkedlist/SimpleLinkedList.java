@@ -86,7 +86,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
         }
     }
 
-    // Implementation of Iterable<E>, enables the Class to be iterated via foreach
+    // implementation of Iterable<E>, enables the class to be iterated via foreach
 
     public Iterator<E> iterator() {
         return new Iter();
