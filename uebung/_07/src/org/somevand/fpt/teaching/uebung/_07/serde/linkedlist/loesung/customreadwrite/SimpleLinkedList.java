@@ -1,8 +1,10 @@
 package org.somevand.fpt.teaching.uebung._07.serde.linkedlist.loesung.customreadwrite;
 
 import java.io.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class SimpleLinkedList<E extends Serializable> implements Serializable {
+public class SimpleLinkedList<E extends Serializable> implements Iterable<E>, Serializable {
     @Serial
     private static final long serialVersionUID = 0L;
 
@@ -90,8 +92,8 @@ public class SimpleLinkedList<E extends Serializable> implements Serializable {
     private void writeObject(ObjectOutputStream oos) throws IOException {
         oos.defaultWriteObject();
         oos.writeInt(size);
-        for (Entry<E> entry = head; entry != null; entry = entry.next) {
-            oos.writeObject(entry.data);
+        for (E entry : this) {
+            oos.writeObject(entry);
         }
     }
 
@@ -103,6 +105,36 @@ public class SimpleLinkedList<E extends Serializable> implements Serializable {
             this.previous = previous;
             this.data = data;
             this.next = next;
+        }
+    }
+
+    // Implementation of Iterable<E>, enables the Class to be iterated via foreach
+
+    public Iterator<E> iterator() {
+        return new Iter();
+    }
+
+    private class Iter implements Iterator<E> {
+
+        public Iter() {
+
+        }
+
+        private Entry<E> next = head;
+
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
+
+        @Override
+        public E next() {
+            if (next == null) {
+                throw new NoSuchElementException();
+            }
+            E data = next.data;
+            next = next.next;
+            return data;
         }
     }
 

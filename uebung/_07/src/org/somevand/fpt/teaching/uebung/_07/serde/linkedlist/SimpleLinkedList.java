@@ -1,6 +1,9 @@
 package org.somevand.fpt.teaching.uebung._07.serde.linkedlist;
 
-public class SimpleLinkedList<E> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class SimpleLinkedList<E> implements Iterable<E> {
     private Entry<E> head, tail;
     private int size;
 
@@ -80,6 +83,36 @@ public class SimpleLinkedList<E> {
             this.previous = previous;
             this.data = data;
             this.next = next;
+        }
+    }
+
+    // Implementation of Iterable<E>, enables the Class to be iterated via foreach
+
+    public Iterator<E> iterator() {
+        return new Iter();
+    }
+
+    private class Iter implements Iterator<E> {
+
+        public Iter() {
+
+        }
+
+        private Entry<E> next = head;
+
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
+
+        @Override
+        public E next() {
+            if (next == null) {
+                throw new NoSuchElementException();
+            }
+            E data = next.data;
+            next = next.next;
+            return data;
         }
     }
 }
