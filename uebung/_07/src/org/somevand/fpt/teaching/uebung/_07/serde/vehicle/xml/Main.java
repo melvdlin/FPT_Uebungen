@@ -34,9 +34,9 @@ public class Main {
             var oos = new XMLEncoder(fos)) {
             oos.writeObject(car);
         }
-        try(var oos = new XMLEncoder(System.out)) {
-            oos.writeObject(car);
-        }
+        // try(var oos = new XMLEncoder(System.out)) {
+        //     oos.writeObject(car);
+        // }
         try(var fis = new FileInputStream(path);
             var ois = new XMLDecoder(fis)) {
             anotherCar = (Vehicle) ois.readObject();

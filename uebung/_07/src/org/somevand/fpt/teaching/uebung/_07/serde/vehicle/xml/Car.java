@@ -60,9 +60,9 @@ public class Car extends Vehicle {
         this.wheels = wheels;
     }
 
-    public void setWheels(int index, Wheel wheel) {
-        this.wheels.set(index, wheel);
-    }
+    // public void setWheels(int index, Wheel wheel) {
+    //     this.wheels.set(index, wheel);
+    // }
 
     @Override
     public String toString() {

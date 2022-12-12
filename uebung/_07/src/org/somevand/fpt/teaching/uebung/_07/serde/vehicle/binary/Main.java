@@ -34,6 +34,9 @@ public class Main {
             var oos = new ObjectOutputStream(fos)) {
             oos.writeObject(car);
         }
+        try(var oos = new ObjectOutputStream(System.out)) {
+            oos.writeObject(car);
+        }
         try(var fis = new FileInputStream(path);
             var ois = new ObjectInputStream(fis)) {
             anotherCar = (Vehicle) ois.readObject();
