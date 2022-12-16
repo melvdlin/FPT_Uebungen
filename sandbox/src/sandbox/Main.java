@@ -5,66 +5,85 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        String o;
-        o = "I'm a string";
+        AbstractFactory factory = new DesktopFactory();
+        Button button = factory.createButton();
 
-        System.out.println(null instanceof Object);
+        button.addOnClickListener(() -> System.out.println("I was clicked"));
+        button.addOnClickListener(() -> System.out.println(1));
 
-        System.out.println(o);
-        o = Objects.requireNonNull(o);
-        System.out.println(o);
-        o = Objects.requireNonNull(null);
-        System.out.println(o);
+        Button anotherButton = factory.createButton();
+        anotherButton.addOnClickListener(() -> System.out.println("I was also clicked"));
 
-        List<SomeSubClass> l = new ArrayList<>();
-        l.add(new SomeSubClass(1, 2));
-        l.add(new SomeSubClass(2, 3));
-        l.add(new SomeSubClass(3, 4));
-
-        l.sort(new SomeSubComparator());
-        l.sort(new SomeComparator());
+        button.onClick();
+        anotherButton.onClick();
     }
+
 }
 
-class SomeClass {
-    private final int x;
-
-    public SomeClass(int x) {
-        this.x = x;
-    }
-
-    public int getX() {
-        return x;
-    }
+interface AbstractFactory {
+    Button createButton();
+    Window createWindow(String title);
 }
 
-
-class SomeSubClass extends SomeClass {
-
-    private final int y;
-
-    public SomeSubClass(int x, int y) {
-        super(x);
-        this.y = y;
-    }
-
-    public int getY() {
-        return y;
-    }
+interface Button {
+    void onClick();
+    void addOnClickListener(Runnable listener);
 }
 
-class SomeComparator implements Comparator<SomeClass> {
+interface Window {
+    void draw();
+    String getTitle();
+}
+
+class DesktopButton implements Button {
+
+    private List<Runnable> listeners = new ArrayList<>();
+
+    public DesktopButton() {
+
+    }
 
     @Override
-    public int compare(SomeClass o1, SomeClass o2) {
-        return Integer.compare(o1.getX(), o2.getX());
+    public void onClick() {
+        for (Runnable listener : listeners) {
+            listener.run();
+        }
+    }
+
+    @Override
+    public void addOnClickListener(Runnable listener) {
+        listeners.add(listener);
     }
 }
 
-class SomeSubComparator implements Comparator<SomeSubClass> {
+class DesktopWindow implements Window {
+
+    private String title;
+
+    public DesktopWindow(String windowTitle) {
+        this.title = windowTitle;
+    }
 
     @Override
-    public int compare(SomeSubClass o1, SomeSubClass o2) {
-        return Integer.compare(o1.getX() + o1.getY(), o2.getX() + o2.getY());
+    public void draw() {
+        System.out.println("Drawing Desktop Window...");
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+}
+
+class DesktopFactory implements AbstractFactory {
+
+    @Override
+    public Button createButton() {
+        return new DesktopButton();
+    }
+
+    @Override
+    public Window createWindow(String title) {
+        return new DesktopWindow(title);
     }
 }
