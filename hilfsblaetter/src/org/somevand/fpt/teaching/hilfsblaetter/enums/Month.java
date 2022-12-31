@@ -5,6 +5,7 @@ import java.util.List;
 
 // enums can implement interfaces like any other class
 public enum Month implements Iterable<Integer> {
+    // declaration of enum constants
     // explicit call of Enum(int day) constructor
     JANUARY(31),
     FEBRUARY(28),
@@ -20,6 +21,7 @@ public enum Month implements Iterable<Integer> {
     OCTOBER(31),
     NOVEMBER,
     DECEMBER(31);
+    // declaration of enum constants terminated by a semicolon
 
     // enums can have fields just like any other class
     private final int days;
@@ -36,6 +38,7 @@ public enum Month implements Iterable<Integer> {
         this.days = days;
     }
 
+    // enums can have methods just like any other class
     public static List<Month> getMonths() {
         return months;
     }
