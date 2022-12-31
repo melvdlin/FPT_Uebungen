@@ -10,10 +10,10 @@ public enum Month implements Iterable<Integer> {
     JANUARY(31),
     FEBRUARY(28),
     MARCH(31),
-    // explicit call to parameterless constructor
+    // explicit call of parameterless constructor
     APRIL(),
     MAY(31),
-    // implicit call to parameterless constructor
+    // implicit call of parameterless constructor
     JUNE,
     JULY(31),
     AUGUST(31),
