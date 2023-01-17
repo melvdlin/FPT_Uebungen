@@ -1,89 +1,31 @@
 package sandbox;
 
 import java.util.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
 
-    public static void main(String[] args) {
-        AbstractFactory factory = new DesktopFactory();
-        Button button = factory.createButton();
+    public static void main(String[] args) throws InterruptedException {
+        Lock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
 
-        button.addOnClickListener(() -> System.out.println("I was clicked"));
-        button.addOnClickListener(() -> System.out.println(1));
+        Thread t = new Thread(() -> {
+            try {
+                lock.lockInterruptibly();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.printf("%s exiting..." + Thread.currentThread().getName());
+            } finally {
+                lock.unlock();
+                System.out.println("Unlocked!");
+            }
+        });
 
-        Button anotherButton = factory.createButton();
-        anotherButton.addOnClickListener(() -> System.out.println("I was also clicked"));
-
-        button.onClick();
-        anotherButton.onClick();
-    }
-
-}
-
-interface AbstractFactory {
-    Button createButton();
-    Window createWindow(String title);
-}
-
-interface Button {
-    void onClick();
-    void addOnClickListener(Runnable listener);
-}
-
-interface Window {
-    void draw();
-    String getTitle();
-}
-
-class DesktopButton implements Button {
-
-    private List<Runnable> listeners = new ArrayList<>();
-
-    public DesktopButton() {
-
-    }
-
-    @Override
-    public void onClick() {
-        for (Runnable listener : listeners) {
-            listener.run();
-        }
-    }
-
-    @Override
-    public void addOnClickListener(Runnable listener) {
-        listeners.add(listener);
-    }
-}
-
-class DesktopWindow implements Window {
-
-    private String title;
-
-    public DesktopWindow(String windowTitle) {
-        this.title = windowTitle;
-    }
-
-    @Override
-    public void draw() {
-        System.out.println("Drawing Desktop Window...");
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-}
-
-class DesktopFactory implements AbstractFactory {
-
-    @Override
-    public Button createButton() {
-        return new DesktopButton();
-    }
-
-    @Override
-    public Window createWindow(String title) {
-        return new DesktopWindow(title);
+        lock.lock();
+        t.start();
+        Thread.sleep(500);
+        t.interrupt();
     }
 }

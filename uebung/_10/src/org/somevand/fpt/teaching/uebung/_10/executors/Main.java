@@ -1,4 +1,4 @@
-package sandbox.concurrency;
+package org.somevand.fpt.teaching.uebung._10.executors;
 
 import java.util.ArrayList;
 import java.util.List;
