@@ -3,8 +3,6 @@ package org.somevand.fpt.teaching.uebung._10.producerconsumer.unrestricted;
 import org.somevand.fpt.teaching.uebung._10.producerconsumer.DummyCar;
 
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 
 public class Producer implements Runnable {
 
