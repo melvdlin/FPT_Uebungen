@@ -15,24 +15,9 @@ public class Cell {
     }
 
     public synchronized void swapValue(Cell other) {
-        try {
-            System.out.printf("%s swapping...%n", Thread.currentThread().getName());
-            Thread.sleep(10);
-        } catch (InterruptedException e) { }
         long temp = getValue();
         long newValue = other.getValue();
         setValue(newValue);
         other.setValue(temp);
-    }
-
-    public static void main(String[] args) {
-        Cell aCell = new Cell(1);
-        Cell anotherCell = new Cell(2);
-
-        Thread aThread = new Thread(() -> aCell.swapValue(anotherCell));
-        Thread anotherThread = new Thread(() -> anotherCell.swapValue(aCell));
-
-        aThread.start();
-        anotherThread.start();
     }
 }
