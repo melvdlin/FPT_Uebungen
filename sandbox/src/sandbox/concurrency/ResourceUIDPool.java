@@ -3,6 +3,9 @@ package sandbox.concurrency;
 import java.util.Comparator;
 import java.util.Random;
 import java.util.WeakHashMap;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 
 public class ResourceUIDPool<T> implements Comparator<T>, Function<T, Integer> {
@@ -38,4 +41,5 @@ public class ResourceUIDPool<T> implements Comparator<T>, Function<T, Integer> {
     synchronized public Integer apply(T o) {
         return get(o);
     }
+
 }
