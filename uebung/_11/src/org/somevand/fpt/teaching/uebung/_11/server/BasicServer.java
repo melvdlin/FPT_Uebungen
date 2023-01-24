@@ -14,7 +14,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class BasicServer implements Runnable {
+public class BasicServer {
 
     private static final String logFormat = "[SERVER] %s%n";
     private final String dbURL;
@@ -27,7 +27,6 @@ public class BasicServer implements Runnable {
         this.port = port;
     }
 
-    @Override
     public void run() {
         try (ServerSocket socket = new ServerSocket(port);
              Connection dbConnection = DriverManager.getConnection(dbURL)) {
@@ -96,8 +95,7 @@ public class BasicServer implements Runnable {
         final String dbURL = JDBC.PREFIX + "fpt.uebung11";
         final int port = 6666;
         BasicServer server = new BasicServer(dbURL, port);
-        Thread serverThread = new Thread(server);
-        serverThread.start();
+        server.run();
     }
 
 }
