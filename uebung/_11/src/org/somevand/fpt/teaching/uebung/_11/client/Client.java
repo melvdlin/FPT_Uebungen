@@ -18,10 +18,13 @@ public class Client {
         try (Socket socket = new Socket(InetAddress.getLocalHost(), serverPort);
              var out = new ObjectOutputStream(socket.getOutputStream());
              var in = new ObjectInputStream(socket.getInputStream())) {
+
             out.writeObject(Action.LOGIN);
             out.writeObject(userName);
             out.writeObject(pwd);
+
             Response response = (Response) in.readObject();
+
             return switch (response) {
                 case SUCCESS -> true;
                 case FAILURE -> false;
@@ -36,12 +39,15 @@ public class Client {
         try (Socket socket = new Socket(InetAddress.getLocalHost(), serverPort);
              var out = new ObjectOutputStream(socket.getOutputStream());
              var in = new ObjectInputStream(socket.getInputStream())) {
+
             out.writeObject(Action.REGISTER);
             out.writeObject(userName);
             out.writeObject(pwd);
             out.writeObject(firstName);
             out.writeObject(lastName);
+
             Response response = (Response) in.readObject();
+
             return switch (response) {
                 case SUCCESS -> true;
                 case FAILURE -> false;
@@ -56,8 +62,11 @@ public class Client {
         try (Socket socket = new Socket(InetAddress.getLocalHost(), serverPort);
              var out = new ObjectOutputStream(socket.getOutputStream());
              var in = new ObjectInputStream(socket.getInputStream())) {
+
             out.writeObject(Action.SHUTDOWN);
+
             Response response = (Response) in.readObject();
+
             return switch (response) {
                 case SUCCESS -> true;
                 case FAILURE -> false;

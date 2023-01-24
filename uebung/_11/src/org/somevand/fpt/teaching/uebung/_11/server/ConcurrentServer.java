@@ -8,14 +8,14 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.sql.*;
 
-public class Server implements Runnable {
+public class ConcurrentServer implements Runnable {
 
     private static final String logFormat = "[SERVER] %s%n";
     private final String dbURL;
     private final int port;
     private final ServerSocket socket;
 
-    public Server(String dbURL, int port) throws IOException {
+    public ConcurrentServer(String dbURL, int port) throws IOException {
         this.dbURL = dbURL;
         this.port = port;
         this.socket = new ServerSocket(port);
@@ -49,7 +49,7 @@ public class Server implements Runnable {
     public static void main(String[] args) throws IOException {
         final String dbURL = JDBC.PREFIX + "fpt.uebung11";
         final int port = 6666;
-        Server server = new Server(dbURL, port);
+        ConcurrentServer server = new ConcurrentServer(dbURL, port);
         Thread serverThread = new Thread(server);
         serverThread.start();
     }

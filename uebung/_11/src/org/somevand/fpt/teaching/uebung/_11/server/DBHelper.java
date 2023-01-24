@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class DBHelper {
 
@@ -13,6 +15,11 @@ class DBHelper {
     static final String firstNameCol = "firstName";
     static final String lastNameCol = "lastName";
     static final String valueFormat = "%.255s";
+    private static final ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    static ReadWriteLock getLock() {
+        return lock;
+    }
 
     static void createTable(Connection connection) throws SQLException {
         try (Statement statement = connection.createStatement()) {

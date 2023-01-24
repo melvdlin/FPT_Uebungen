@@ -2,47 +2,60 @@ package org.somevand.fpt.teaching.uebung._11.server;
 
 import org.somevand.fpt.teaching.uebung._11.shared.Action;
 import org.somevand.fpt.teaching.uebung._11.shared.Response;
+import org.sqlite.JDBC;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Optional;
 
-class ConnectionHandler implements Runnable {
-    private final String logFormat = "[CHANDLER] %s%n";
-    private final ConcurrentServer server;
-    private final Socket socket;
-    private final Connection dbConnection;
+public class BasicServer implements Runnable {
 
-    public ConnectionHandler(ConcurrentServer server, Socket socket, Connection dbConnection) {
-        this.server = server;
-        this.socket = socket;
-        this.dbConnection = dbConnection;
+    private static final String logFormat = "[SERVER] %s%n";
+    private final String dbURL;
+    private final int port;
+
+    private boolean shutdown = false;
+
+    public BasicServer(String dbURL, int port) {
+        this.dbURL = dbURL;
+        this.port = port;
     }
 
     @Override
     public void run() {
+        try (ServerSocket socket = new ServerSocket(port);
+             Connection dbConnection = DriverManager.getConnection(dbURL)) {
+            while (!shutdown) {
+                Socket sock = socket.accept();
+                service(sock, dbConnection);
+            }
+        } catch (IOException | SQLException e) {
+            System.out.printf(logFormat, e);
+        } finally {
+            System.out.printf(logFormat, "terminating...");
+        }
+    }
+
+    private void service(Socket socket, Connection dbConnection) {
         try (socket;
              var in = new ObjectInputStream(socket.getInputStream());
              var out = new ObjectOutputStream(socket.getOutputStream());
              dbConnection) {
+
             Action action = (Action) in.readObject();
             Response response;
+
             switch (action) {
                 case LOGIN -> {
                     String userName = (String) in.readObject();
                     String pwd = (String) in.readObject();
-                    Optional<String> actualPwd;
-
-                    DBHelper.getLock().readLock().lock();
-                    try {
-                        actualPwd = DBHelper.queryPassword(dbConnection, userName);
-                    } finally {
-                        DBHelper.getLock().readLock().unlock();
-                    }
+                    Optional<String> actualPwd = DBHelper.queryPassword(dbConnection, userName);
 
                     if (actualPwd.isPresent() && pwd.equals(actualPwd.get())) {
                         response = Response.SUCCESS;
@@ -56,20 +69,15 @@ class ConnectionHandler implements Runnable {
                     String firstName = (String) in.readObject();
                     String lastName = (String) in.readObject();
 
-                    DBHelper.getLock().writeLock().lock();
-                    try {
-                        if (!DBHelper.queryContainsUserName(dbConnection, userName)) {
-                            response = Response.SUCCESS;
-                            DBHelper.insertEntry(dbConnection, userName, pwd, firstName, lastName);
-                        } else {
-                            response = Response.FAILURE;
-                        }
-                    } finally {
-                        DBHelper.getLock().writeLock().unlock();
+                    if (!DBHelper.queryContainsUserName(dbConnection, userName)) {
+                        response = Response.SUCCESS;
+                        DBHelper.insertEntry(dbConnection, userName, pwd, firstName, lastName);
+                    } else {
+                        response = Response.FAILURE;
                     }
                 }
                 case SHUTDOWN -> {
-                    server.shutdown();
+                    shutdown = true;
                     response = Response.SUCCESS;
                 }
                 default -> response = Response.FAILURE;
@@ -83,4 +91,13 @@ class ConnectionHandler implements Runnable {
             System.out.printf(logFormat, "closing connection...");
         }
     }
+
+    public static void main(String[] args) {
+        final String dbURL = JDBC.PREFIX + "fpt.uebung11";
+        final int port = 6666;
+        BasicServer server = new BasicServer(dbURL, port);
+        Thread serverThread = new Thread(server);
+        serverThread.start();
+    }
+
 }

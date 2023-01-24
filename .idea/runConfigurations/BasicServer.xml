@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Server" type="Application" factoryName="Application" folderName="_11" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebung._11.server.Server" />
+  <configuration default="false" name="BasicServer" type="Application" factoryName="Application" folderName="_11">
+    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebung._11.server.BasicServer" />
     <module name="_11" />
     <extension name="coverage">
       <pattern>
