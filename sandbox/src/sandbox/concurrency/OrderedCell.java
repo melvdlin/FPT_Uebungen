@@ -1,6 +1,7 @@
-package org.somevand.fpt.teaching.uebung._10.deadlocks;
+package sandbox.concurrency;
 
 public class OrderedCell {
+    private static volatile Object o = new Object();
     private long value;
     public OrderedCell(long value) {
         this.value = value;
@@ -19,10 +20,9 @@ public class OrderedCell {
             this.unsafeSwapValue(other);
         } else if (System.identityHashCode(this) > System.identityHashCode(other)) {
             other.unsafeSwapValue(this);
-        } else {
-            synchronized (OrderedCell.class) {
-                this.unsafeSwapValue(other);
-            }
+        }
+        synchronized (OrderedCell.class) {
+
         }
     }
 

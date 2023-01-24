@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="CarClone" type="Application" factoryName="Application" folderName="uebungsechs">
+  <configuration default="false" name="CarClone" type="Application" factoryName="Application" folderName="_06">
     <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebung.old._06.Main" />
     <module name="_06_old" />
     <method v="2">

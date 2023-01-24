@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="FilePrinter" type="Application" factoryName="Application" folderName="uebungfuenf">
+  <configuration default="false" name="FilePrinter" type="Application" factoryName="Application" folderName="_05">
     <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebung._05.exceptions.FilePrinter" />
     <module name="_05" />
     <extension name="coverage">

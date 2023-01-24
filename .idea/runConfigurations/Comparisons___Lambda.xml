@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Comparisons - Lambda" type="Application" factoryName="Application" folderName="uebungfuenf">
+  <configuration default="false" name="Comparisons - Lambda" type="Application" factoryName="Application" folderName="_05">
     <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebung._05.comparisons.comparators_lambda.Main" />
     <module name="_05" />
     <extension name="coverage">

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Person" type="Application" factoryName="Application" folderName="uebungeins">
+  <configuration default="false" name="Person" type="Application" factoryName="Application" folderName="_01">
     <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebung._01.Person" />
     <module name="_01" />
     <method v="2">

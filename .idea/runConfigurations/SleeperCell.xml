@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SleeperCell" type="Application" factoryName="Application" folderName="_10">
+    <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebung._10.deadlocks.SleeperCell" />
+    <module name="_10" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="org.somevand.fpt.teaching.uebung._10.deadlocks.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

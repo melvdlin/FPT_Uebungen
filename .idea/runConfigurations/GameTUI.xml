@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="GameTUI" type="Application" factoryName="Application" folderName="uebungvier_old">
+  <configuration default="false" name="GameTUI" type="Application" factoryName="Application" folderName="old_04">
     <option name="MAIN_CLASS_NAME" value="org.somevand.fpt.teaching.uebung._04.MainTUI" />
     <module name="_04_old" />
     <method v="2">
