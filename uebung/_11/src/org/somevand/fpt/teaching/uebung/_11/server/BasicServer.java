@@ -44,8 +44,8 @@ public class BasicServer {
     private void service(Socket socket, Connection dbConnection) {
         try (socket;
              var in = new ObjectInputStream(socket.getInputStream());
-             var out = new ObjectOutputStream(socket.getOutputStream());
-             dbConnection) {
+             var out = new ObjectOutputStream(socket.getOutputStream())
+        ) {
 
             Action action = (Action) in.readObject();
             Response response;

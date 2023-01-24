@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class Client {
@@ -79,7 +78,7 @@ public class Client {
     public static void main(String[] args) throws IOException {
         final int serverPort = 6666;
         Client client = new Client(serverPort);
-        if (args[0].equalsIgnoreCase("shutdown")) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("shutdown")) {
             System.out.println(client.shutdown());
         } else {
             System.out.println(client.login("somevand", "noneofyourbusiness"));
