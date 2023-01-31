@@ -26,7 +26,7 @@ class DBHelper {
             statement.executeUpdate(
                     String.format("CREATE TABLE %s (%s %s, %s %s, %s %s, %s %s);",
                             tableName,
-                            userNameCol,    "VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE",
+                            userNameCol,    "VARCHAR(255) PRIMARY KEY",
                             pwdCol,         "VARCHAR(255) NOT NULL",
                             firstNameCol,   "VARCHAR(255)",
                             lastNameCol,    "VARCHAR(255)"
@@ -41,7 +41,13 @@ class DBHelper {
         }
     }
 
-    static void insertEntry(Connection connection, String userName, String pwd, String firstName, String lastName) throws SQLException {
+    static void insertEntry(
+            Connection connection,
+            String userName,
+            String pwd,
+            String firstName,
+            String lastName
+    ) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(
                 String.format(
                         "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)",
