@@ -9,13 +9,8 @@ public class CommonCarPartFactory implements CarPartFactory {
     }
 
     @Override
-    public Engine buildEngine(int numberOfPistons) {
-        return numberOfPistons < 5 ? new PetrolEngine(numberOfPistons) : new DieselEngine(numberOfPistons);
-    }
-
-    @Override
-    public HeadLights buildHeadlights() {
-        return new HalogenHeadlights();
+    public Engine buildEngine() {
+        return new DieselEngine(4);
     }
 
     @Override

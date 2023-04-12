@@ -5,13 +5,8 @@ import org.somevand.fpt.teaching.uebung._09.abstractfactory.*;
 public class FancyCarPartFactory implements CarPartFactory {
 
     @Override
-    public Engine buildEngine(int numberOfPistons) {
-        return new PetrolEngine(numberOfPistons);
-    }
-
-    @Override
-    public HeadLights buildHeadlights() {
-        return new LEDHeadlights();
+    public Engine buildEngine() {
+        return new PetrolEngine(5);
     }
 
     @Override

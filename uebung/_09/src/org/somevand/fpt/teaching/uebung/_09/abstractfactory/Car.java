@@ -3,17 +3,35 @@ package org.somevand.fpt.teaching.uebung._09.abstractfactory;
 import java.util.List;
 import java.util.Random;
 
-public interface Car {
-    Engine getEngine();
-    List<Seat> getSeats();
-    HeadLights getHeadlights();
-    Color getColor();
+public class Car {
 
-    default void fuelUp() {
+    private Engine engine;
+    private List<Seat> seats;
+    private Color color;
+
+    public Car(Engine engine, List<Seat> seats, Color color) {
+        this.engine = engine;
+        this.seats  = seats;
+        this.color  = color;
+    }
+
+    public Engine getEngine() {
+        return engine;
+    }
+
+    public List<Seat> getSeats() {
+        return seats;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void fuelUp() {
         System.out.println("Fuelling up...");
     }
 
-    default boolean testDrive() {
+    public boolean testDrive() {
         return new Random().nextDouble() <= 0.7;
     }
 }

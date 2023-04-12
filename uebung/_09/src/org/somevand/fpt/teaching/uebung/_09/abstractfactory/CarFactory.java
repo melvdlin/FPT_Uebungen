@@ -1,15 +1,43 @@
 package org.somevand.fpt.teaching.uebung._09.abstractfactory;
 
-public abstract class CarFactory {
-    public final Car order(String model) {
+import java.util.List;
+
+public class CarFactory {
+
+    private CarPartFactory partFactory;
+
+    public CarFactory(CarPartFactory partFactory) {
+        this.partFactory = partFactory;
+    }
+
+    public CarPartFactory getPartFactory() {
+        return partFactory;
+    }
+
+    public void setPartFactory(CarPartFactory partFactory) {
+        this.partFactory = partFactory;
+    }
+
+    public final Car order(Color carColor, Color seatColor) {
         Car car;
         do {
-            car = build(model);
+            car = build(carColor, seatColor);
             car.fuelUp();
             // if the car fails the test drive, dispose of it and build a new one
         } while (!car.testDrive());
         return car;
     }
 
-    protected abstract Car build(String model);
+    private Car build(Color carColor, Color seatColor) {
+        return new Car(
+                partFactory.buildEngine(),
+                List.of(
+                        partFactory.buildSeat(seatColor),
+                        partFactory.buildSeat(seatColor),
+                        partFactory.buildSeat(seatColor),
+                        partFactory.buildSeat(seatColor)
+                ),
+                carColor
+        );
+    }
 }
