@@ -1,8 +1,5 @@
 package org.somevand.fpt.teaching.uebung._08.factorymethod;
 
-import org.somevand.fpt.teaching.uebung._08.factorymethod.Color;
-import org.somevand.fpt.teaching.uebung._08.factorymethod.Seat;
-
 public class ClothCoveredSeat implements Seat {
 
     private Color color;
@@ -14,5 +11,12 @@ public class ClothCoveredSeat implements Seat {
     @Override
     public Color getColor() {
         return color;
+    }
+
+    @Override
+    public String toString() {
+        return "ClothCoveredSeat{" +
+               "color=" + color +
+               '}';
     }
 }

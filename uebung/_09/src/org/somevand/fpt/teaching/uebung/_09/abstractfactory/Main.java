@@ -6,15 +6,22 @@ import org.somevand.fpt.teaching.uebung._09.abstractfactory.porsche.UniquelyFanc
 
 public class Main {
 
-    CarPartFactory opelPartFactory = new CommonCarPartFactory();
-    CarPartFactory porschePartFactory = new FancyCarPartFactory();
-    CarPartFactory ferrariPartFactory = UniquelyFancyCarPartFactory.getInstance();
+    public static void main(String[] args) {
+        CarPartFactory opelPartFactory = new CommonCarPartFactory();
+        CarPartFactory porschePartFactory = new FancyCarPartFactory();
+        CarPartFactory ferrariPartFactory = UniquelyFancyCarPartFactory.getInstance();
 
-    CarFactory opelFactory = new CarFactory(opelPartFactory);
-    CarFactory porscheFactory = new CarFactory(porschePartFactory);
-    CarFactory ferrariFactory = new CarFactory(ferrariPartFactory);
+        CarDealership opelFactory = new CarDealership(opelPartFactory);
+        CarDealership porscheFactory = new CarDealership(porschePartFactory);
+        CarDealership ferrariFactory = new CarDealership(ferrariPartFactory);
 
-    Car opelCar = opelFactory.order(Color.BLUE, Color.GREY);
-    Car porscheCar = porscheFactory.order(Color.WHITE, Color.BLACK);
-    Car ferrari = ferrariFactory.order(Color.RED, Color.BROWN);
+        Car opelCar = opelFactory.order(Color.BLUE, Color.GREY);
+        Car porscheCar = porscheFactory.order(Color.WHITE, Color.BLACK);
+        Car ferrariCar = ferrariFactory.order(Color.RED, Color.BROWN);
+
+        System.out.printf("Opel seats:      %s%n", opelCar.getSeats());
+        System.out.printf("Porsche Engine:  %s%n", porscheCar.getEngine());
+        System.out.printf("Ferrari Engine:  %s%n", ferrariCar.getEngine());
+    }
+
 }

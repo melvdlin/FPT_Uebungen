@@ -8,12 +8,12 @@ import java.util.List;
 public class Porsche991 implements Car {
 
     private Engine engine = new PetrolEngine(17);
-    private List<Seat> seats = Arrays.asList(new LeatherCoveredSeat(Color.RED));
-    private HeadLights headLights = new HalogenHeadlights();
-    private Color color = Color.GREY;
+    private List<Seat> seats;
+    private Color color;
 
-    public Porsche991() {
-
+    public Porsche991(Color carColor, Color seatColor) {
+        this.color = carColor;
+        this.seats = Arrays.asList(new LeatherCoveredSeat(Color.RED));
     }
 
     @Override
@@ -27,12 +27,16 @@ public class Porsche991 implements Car {
     }
 
     @Override
-    public HeadLights getHeadlights() {
-        return headLights;
+    public Color getColor() {
+        return color;
     }
 
     @Override
-    public Color getColor() {
-        return color;
+    public String toString() {
+        return "Porsche991{" +
+               "engine=" + engine +
+               ", seats=" + seats +
+               ", color=" + color +
+               '}';
     }
 }

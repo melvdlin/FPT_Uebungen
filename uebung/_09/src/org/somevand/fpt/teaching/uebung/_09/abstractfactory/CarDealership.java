@@ -2,11 +2,11 @@ package org.somevand.fpt.teaching.uebung._09.abstractfactory;
 
 import java.util.List;
 
-public class CarFactory {
+public class CarDealership {
 
     private CarPartFactory partFactory;
 
-    public CarFactory(CarPartFactory partFactory) {
+    public CarDealership(CarPartFactory partFactory) {
         this.partFactory = partFactory;
     }
 

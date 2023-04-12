@@ -7,22 +7,19 @@ import java.util.List;
 
 public class Meriva implements Car {
 
-    private Engine engine;
-    private List<Seat> seats = Arrays.asList(
-            new ClothCoveredSeat(Color.GREY),
-            new ClothCoveredSeat(Color.GREY),
-            new ClothCoveredSeat(Color.BLACK),
-            new ClothCoveredSeat(Color.BLACK),
-            new ClothCoveredSeat(Color.BLACK)
-    );
-
-    private HeadLights headLights = new LEDHeadlights();
-
+    private Engine engine = new DieselEngine(4);
+    private List<Seat> seats;
     private Color color;
 
-    public Meriva(Color color, boolean diesel) {
-        this.color = color;
-        this.engine = diesel ? new DieselEngine(4) : new PetrolEngine(4);
+    public Meriva(Color carColor, Color seatColor) {
+        this.color = carColor;
+        this.seats = Arrays.asList(
+                new ClothCoveredSeat(seatColor),
+                new ClothCoveredSeat(seatColor),
+                new ClothCoveredSeat(seatColor),
+                new ClothCoveredSeat(seatColor),
+                new ClothCoveredSeat(seatColor)
+        );
     }
 
     @Override
@@ -36,12 +33,16 @@ public class Meriva implements Car {
     }
 
     @Override
-    public HeadLights getHeadlights() {
-        return headLights;
+    public Color getColor() {
+        return color;
     }
 
     @Override
-    public Color getColor() {
-        return color;
+    public String toString() {
+        return "Meriva{" +
+               "engine=" + engine +
+               ", seats=" + seats +
+               ", color=" + color +
+               '}';
     }
 }

@@ -8,18 +8,18 @@ import java.util.List;
 public class Corsa implements Car {
 
     private Engine engine = new PetrolEngine(3);
-    private List<Seat> seats = Arrays.asList(
-            new ClothCoveredSeat(Color.BLACK),
-            new ClothCoveredSeat(Color.BLACK),
-            new ClothCoveredSeat(Color.BLACK),
-            new ClothCoveredSeat(Color.BLACK),
-            new ClothCoveredSeat(Color.BLACK)
-    );
-    private HeadLights headLights = new LEDHeadlights();
+    private List<Seat> seats;
     private Color color;
 
-    public Corsa(Color color) {
+    public Corsa(Color color, Color seatColor) {
         this.color = color;
+        this.seats = Arrays.asList(
+                new ClothCoveredSeat(Color.BLACK),
+                new ClothCoveredSeat(Color.BLACK),
+                new ClothCoveredSeat(Color.BLACK),
+                new ClothCoveredSeat(Color.BLACK),
+                new ClothCoveredSeat(Color.BLACK)
+        );
     }
 
     @Override
@@ -33,12 +33,16 @@ public class Corsa implements Car {
     }
 
     @Override
-    public HeadLights getHeadlights() {
-        return headLights;
+    public Color getColor() {
+        return color;
     }
 
     @Override
-    public Color getColor() {
-        return color;
+    public String toString() {
+        return "Corsa{" +
+               "engine=" + engine +
+               ", seats=" + seats +
+               ", color=" + color +
+               '}';
     }
 }
