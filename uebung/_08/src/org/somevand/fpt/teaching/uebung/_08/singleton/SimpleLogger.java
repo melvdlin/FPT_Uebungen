@@ -3,7 +3,7 @@ package org.somevand.fpt.teaching.uebung._08.singleton;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 
-public enum LoggerImpl implements Logger {
+public enum SimpleLogger implements Logger {
     STDERR(System.err),
     STDOUT(System.out),
     ;
@@ -14,7 +14,7 @@ public enum LoggerImpl implements Logger {
     private static String logEntryFormat = "%-38s: %s%n";
     private PrintStream logStream;
 
-    private LoggerImpl(PrintStream logStream) {
+    private SimpleLogger(PrintStream logStream) {
         this.logStream = logStream;
     }
 
@@ -61,13 +61,13 @@ public enum LoggerImpl implements Logger {
     }
 
     public static void main(String[] args) {
-        LoggerImpl.STDERR.logDebug("some debug info!");
-        LoggerImpl.STDERR.logInfo("some info!");
-        LoggerImpl.STDERR.logWarning("some warning!");
-        LoggerImpl.STDERR.logError("some error!");
-        LoggerImpl.STDOUT.logDebug("some debug info!");
-        LoggerImpl.STDOUT.logInfo("some info!");
-        LoggerImpl.STDOUT.logWarning("some warning!");
-        LoggerImpl.STDOUT.logError("some error!");
+        SimpleLogger.STDERR.logDebug("some debug info!");
+        SimpleLogger.STDERR.logInfo("some info!");
+        SimpleLogger.STDERR.logWarning("some warning!");
+        SimpleLogger.STDERR.logError("some error!");
+        SimpleLogger.STDOUT.logDebug("some debug info!");
+        SimpleLogger.STDOUT.logInfo("some info!");
+        SimpleLogger.STDOUT.logWarning("some warning!");
+        SimpleLogger.STDOUT.logError("some error!");
     }
 }
