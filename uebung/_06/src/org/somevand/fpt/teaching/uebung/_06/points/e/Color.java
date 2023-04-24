@@ -45,6 +45,14 @@ class Color {
     }
 
     @Override
+    public int hashCode() {
+        int result = red;
+        result = 31 * result + (int) green;
+        result = 31 * result + (int) blue;
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Color{" +
                "red=" + red +
