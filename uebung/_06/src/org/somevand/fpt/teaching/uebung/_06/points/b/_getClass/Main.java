@@ -5,7 +5,7 @@ class Main {
     public static void main(String[] args) {
 
         Point p = new Point(1, 2);
-        Point cp = new ColorPoint(1, 2, Color.BLUE);
+        Point cp = new ColorPoint(1, 2, new Color((byte) 0, (byte) 0, (byte) 0xFF));
         Point ctrp = new CounterPoint(1, 2);
 
         System.out.printf("p.equals(cp):    %b%n", p.equals(cp));

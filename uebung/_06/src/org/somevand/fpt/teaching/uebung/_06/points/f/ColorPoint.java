@@ -3,8 +3,9 @@ package org.somevand.fpt.teaching.uebung._06.points.f;
 import java.util.Objects;
 
 class ColorPoint implements Cloneable {
+
     private Point point;
-    private final Color color;
+    private Color color;
 
     public ColorPoint(int x, int y, Color color) {
         this.point = new Point(x, y);
@@ -27,10 +28,10 @@ class ColorPoint implements Cloneable {
     @Override
     public boolean equals(Object o) {
         return this
-                == o
-                || o instanceof ColorPoint other
-                && point.equals(other.getPoint())
-                && color.equals(other.getColor());
+               == o
+               || o instanceof ColorPoint other
+                  && point.equals(other.getPoint())
+                  && color.equals(other.getColor());
     }
 
     @Override
@@ -46,6 +47,7 @@ class ColorPoint implements Cloneable {
         try {
             ColorPoint clone = (ColorPoint) super.clone();
             clone.point = clone.point.clone();
+            clone.color = clone.color.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

@@ -5,10 +5,10 @@ class Main {
     public static void main(String[] args) {
 
         Point p = new Point(1, 2);
-        ColorPoint cp1 = new ColorPoint(1, 2, Color.BLUE);
-        ColorPoint cp2 = new ColorPoint(1, 2, Color.BLUE);
-        ColorPoint cp3 = new ColorPoint(2, 3, Color.BLUE);
-        ColorPoint cp4 = new ColorPoint(1, 2, Color.RED);
+        ColorPoint cp1 = new ColorPoint(1, 2, new Color((byte) 0, (byte) 0, (byte) 0xFF));
+        ColorPoint cp2 = new ColorPoint(1, 2, new Color((byte) 0, (byte) 0, (byte) 0xFF));
+        ColorPoint cp3 = new ColorPoint(2, 3, new Color((byte) 0, (byte) 0, (byte) 0xFF));
+        ColorPoint cp4 = new ColorPoint(1, 2, new Color((byte) 0xFF, (byte) 0, (byte) 0));
         Point ctp = new CounterPoint(1, 2);
 
         System.out.printf("p.equals(cp1):               %b%n", p.equals(cp1));
