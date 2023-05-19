@@ -4,7 +4,7 @@
     <module name="sandbox" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="sandbox.*" />
+        <option name="PATTERN" value="sandbox.linkedintest.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
