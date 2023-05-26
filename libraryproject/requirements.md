@@ -30,11 +30,15 @@ Library Management System:
         - checked out by a Customer since a specific point in time
   - Media can be:
     - *Queried* by anyone
+      - Physical Media has its Instances listed
+        - Anyone can see whether an Instance is checked out
+        - Staff can see who an Instance was checked out by
     - *Added* by Staff
     - *Removed* by Staff
   - Physical Media can be:
     - *Checked Out* by Customers
     - *Checked In* by Customers
+  - Customers can list their checked-out media
 - Authentication
   - Several types of Credentials / user accounts exist:
     - Staff
