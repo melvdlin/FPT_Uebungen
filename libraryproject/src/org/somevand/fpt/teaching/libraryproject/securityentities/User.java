@@ -1,18 +1,24 @@
-package org.somevand.fpt.teaching.libraryproject.entities;
+package org.somevand.fpt.teaching.libraryproject.securityentities;
 
 import java.util.Set;
 
 public class User {
     private final String uid;
+    private final String passkey;
     private final Set<Group> groups;
 
-    public User(String uid, Set<Group> groups) {
+    public User(String uid, String passkey, Set<Group> groups) {
         this.uid = uid;
+        this.passkey = passkey;
         this.groups = groups;
     }
 
     public String getUid() {
         return uid;
+    }
+
+    public String getPasskey() {
+        return passkey;
     }
 
     public Set<Group> getGroups() {

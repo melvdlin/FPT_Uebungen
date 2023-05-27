@@ -19,7 +19,7 @@ Library Management System:
     - a UID
     - a Title
     - a set of Authors
-    - a Thumbnail Image
+    - (a Thumbnail Image)
   - Physical Media has:
     - a set of Instances
     - an Instance has:
@@ -32,20 +32,20 @@ Library Management System:
     - *Queried* by anyone
       - Physical Media has its Instances listed
         - Anyone can see whether an Instance is checked out
-        - Staff can see who an Instance was checked out by
     - *Added* by Staff
     - *Removed* by Staff
   - Physical Media can be:
     - *Checked Out* by Customers
-    - *Checked In* by Customers
+    - *Checked In* by Staff
   - Customers can list their checked-out media
+  - Staff can query media instances to see if and by whom they are checked out
 - Authentication
-  - Several types of Credentials / user accounts exist:
+  - Several User Groups exist:
     - Staff
     - Customers
   - Credentials / user accounts have:
     - a UID (could be an alphanumeric string)
-    - a Key / Password (could be UTF-8 string)
+    - a Passkey (byte string of arbitrary length)
   - Credentials can be:
     - Added by Staff
     - Removed by Staff
