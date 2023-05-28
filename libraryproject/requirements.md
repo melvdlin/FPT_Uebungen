@@ -27,28 +27,16 @@ Library Management System:
       - a location
       - a checkout status - it is either
         - checked in
-        - checked out by a Customer since a specific point in time
+        - checked out since a specific point in time
   - Media can be:
-    - *Queried* by anyone
+    - *Queried*
       - Physical Media has its Instances listed
-        - Anyone can see whether an Instance is checked out
-    - *Added* by Staff
-    - *Removed* by Staff
-  - Physical Media can be:
-    - *Checked Out* by Customers
-    - *Checked In* by Staff
-  - Customers can list their checked-out media
-  - Staff can query media instances to see if and by whom they are checked out
-- Authentication
-  - Several User Groups exist:
-    - Staff
-    - Customers
-  - Credentials / user accounts have:
-    - a UID (could be an alphanumeric string)
-    - a Passkey (byte string of arbitrary length)
-  - Credentials can be:
-    - Added by Staff
-    - Removed by Staff
+        - Instance checkout status is indicated in the query result
+    - *Added*
+    - *Removed*
+  - Physical Media Instances can be:
+    - *Checked Out*
+    - *Checked In*
 
 ---
 
