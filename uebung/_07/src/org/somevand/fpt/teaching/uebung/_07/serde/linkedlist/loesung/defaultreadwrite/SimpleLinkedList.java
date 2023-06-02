@@ -8,7 +8,7 @@ public class SimpleLinkedList<E extends Serializable> implements Iterable<E>, Se
     @Serial
     private static final long serialVersionUID = 0L;
 
-    private Entry<E> head, tail;
+    private Entry head, tail;
     private int size;
 
     public SimpleLinkedList() {
@@ -16,7 +16,7 @@ public class SimpleLinkedList<E extends Serializable> implements Iterable<E>, Se
     }
 
     public void prepend(E data) {
-        head = new Entry<>(null, data, head);
+        head = new Entry(null, data, head);
         if (head.next != null) {
             head.next.previous = head;
         }
@@ -27,7 +27,7 @@ public class SimpleLinkedList<E extends Serializable> implements Iterable<E>, Se
     }
 
     public void append(E data) {
-        tail = new Entry<>(tail, data, null);
+        tail = new Entry(tail, data, null);
         if (tail.previous != null) {
             tail.previous.next = tail;
         }
@@ -79,14 +79,46 @@ public class SimpleLinkedList<E extends Serializable> implements Iterable<E>, Se
         return size;
     }
 
-    private static class Entry<E> implements Serializable {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SimpleLinkedList<?> that)) return false;
+
+        if (size != that.size) {
+            return false;
+        }
+
+        Iterator<E> iter;
+        Iterator<?> otherIter;
+        iter = iterator();
+        otherIter = that.iterator();
+
+        while (iter.hasNext() && otherIter.hasNext()) {
+            if (!iter.next().equals(otherIter.next())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = size;
+        for (E element : this) {
+            result = 31 * result + element.hashCode();
+        }
+        return result;
+    }
+
+    private class Entry implements Serializable {
         @Serial
         private static final long serialVersionUID = 0L;
 
         E data;
-        Entry<E> previous, next;
+        Entry previous, next;
 
-        Entry(Entry<E> previous, E data, Entry<E> next) {
+        Entry(Entry previous, E data, Entry next) {
             this.previous = previous;
             this.data = data;
             this.next = next;
@@ -105,7 +137,7 @@ public class SimpleLinkedList<E extends Serializable> implements Iterable<E>, Se
 
         }
 
-        private Entry<E> next = head;
+        private Entry next = head;
 
         @Override
         public boolean hasNext() {
@@ -127,34 +159,37 @@ public class SimpleLinkedList<E extends Serializable> implements Iterable<E>, Se
         long start, end;
         String path = "data";
         SimpleLinkedList<String> l = new SimpleLinkedList<>();
+        SimpleLinkedList<String> otherL;
         for (int i = 0; i < 100_000; i++) {
             l.append(String.valueOf(i));
         }
         start = System.nanoTime();
-        try(var fos = new FileOutputStream(path);
-            var oos = new ObjectOutputStream(fos)) {
+        try (var fos = new FileOutputStream(path);
+             var oos = new ObjectOutputStream(fos)) {
             oos.writeObject(l);
         }
         end = System.nanoTime();
 
         System.out.println(
                 "serialisation:\n" +
-                "start:    " + start + "\n" +
-                "end:      " + end + "\n" +
-                "duration: " + (end - start) / 1_000_000);
+                        "start:    " + start + "\n" +
+                        "end:      " + end + "\n" +
+                        "duration: " + (end - start) / 1_000_000 + " ms");
         System.out.println();
 
         start = System.nanoTime();
-        try(var fis = new FileInputStream(path);
-            var ois = new ObjectInputStream(fis)) {
-            ois.readObject();
+        try (var fis = new FileInputStream(path);
+             var ois = new ObjectInputStream(fis)) {
+            otherL = (SimpleLinkedList<String>) ois.readObject();
         }
         end = System.nanoTime();
         System.out.println(
                 "deserialisation:\n" +
-                "start:    " + start + "\n" +
-                "end:      " + end + "\n" +
-                "duration: " + (end - start) / 1_000_000);
+                        "start:    " + start + "\n" +
+                        "end:      " + end + "\n" +
+                        "duration: " + (end - start) / 1_000_000 + " ms");
         System.out.println();
+
+        System.out.println(l.equals(otherL));
     }
 }
