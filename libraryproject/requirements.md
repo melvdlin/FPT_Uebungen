@@ -35,8 +35,9 @@ Library Management System:
     - *Added*
     - *Removed*
   - Physical Media Instances can be:
-    - *Checked Out*
+    - *Checked Out* by a Customer
     - *Checked In*
+  - A Customer can get a list of all Physical Media Instances currently checked out by them
 
 ---
 
