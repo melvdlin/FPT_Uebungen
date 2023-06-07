@@ -1,7 +1,9 @@
 package org.somevand.fpt.teaching.libraryproject.checkoutlisting;
 
+import java.util.Objects;
+
 public class NoSuchCustomerException extends Exception {
-    public NoSuchCustomerException(int uid) {
-        super(String.format("No customer exists with UID %d", uid));
+    NoSuchCustomerException(CustomerInfo customerInfo) {
+        super(String.format("No customer exists with UID %d", Objects.requireNonNull(customerInfo).UID()));
     }
 }

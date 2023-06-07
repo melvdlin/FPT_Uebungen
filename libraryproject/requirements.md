@@ -10,7 +10,7 @@ Library Management System:
   - Inventory contains different types of Media:
     - Books
     - Articles
-    - Video
+    - org.somevand.fpt.teaching.libraryproject.entities.Video
     - ...
   - Media is available by different means:
     - physically (book, paper, DVD, ...)

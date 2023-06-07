@@ -1,3 +1,5 @@
+package org.somevand.fpt.teaching.libraryproject.entities;
+
 import org.somevand.fpt.teaching.libraryproject.entities.Author;
 import org.somevand.fpt.teaching.libraryproject.entities.Media;
 
@@ -19,7 +21,7 @@ public class Video extends Media {
 
     @Override
     public String toString() {
-        return "Video{" +
+        return "org.somevand.fpt.teaching.libraryproject.entities.Video{" +
                 "duration=" + duration +
                 "} " + super.toString();
     }

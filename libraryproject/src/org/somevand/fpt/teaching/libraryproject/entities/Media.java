@@ -18,7 +18,7 @@ public abstract class Media {
         this.released = Objects.requireNonNull(released);
     }
 
-    public long getUid() {
+    public int getUid() {
         return uid;
     }
 
