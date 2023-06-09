@@ -100,7 +100,11 @@ public class SimpleLinkedList<E extends Serializable> implements Iterable<E>, Se
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SimpleLinkedList<?> that)) return false;
+        if (!(o instanceof SimpleLinkedList<?>)) {
+            return false;
+        }
+        
+        SimpleLinkedList<?> that = (SimpleLinkedList<?>) o;
 
         if (size != that.size) {
             return false;
