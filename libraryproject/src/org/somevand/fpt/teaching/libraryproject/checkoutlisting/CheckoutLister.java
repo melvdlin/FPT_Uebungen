@@ -9,15 +9,15 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CheckoutLister {
-    private CustomerPersistenceGateway customerGateway;
-    private CheckoutPersistenceGateway instanceGateway;
+    private CustomerPersistenceGateway customerPersister;
+    private CheckoutPersistenceGateway instancePersister;
 
     public CheckoutLister(
-            CheckoutPersistenceGateway instanceGateway,
-            CustomerPersistenceGateway customerGateway
+            CheckoutPersistenceGateway instancePersister,
+            CustomerPersistenceGateway customerPersister
     ) {
-        this.instanceGateway = Objects.requireNonNull(instanceGateway);
-        this.customerGateway = Objects.requireNonNull(customerGateway);
+        this.instancePersister = Objects.requireNonNull(instancePersister);
+        this.customerPersister = Objects.requireNonNull(customerPersister);
     }
 
     public Collection<CheckoutInfo> getCheckedOutMediaInstances(
@@ -25,11 +25,11 @@ public class CheckoutLister {
     ) throws NoSuchCustomerException {
 
         Objects.requireNonNull(checkedOutBy);
-        Customer customer = customerGateway
+        Customer customer = customerPersister
                 .getCustomerByUID(checkedOutBy.UID())
                 .orElseThrow(() -> new NoSuchCustomerException(checkedOutBy));
 
-        Collection<PhysicalMediaInstance> instances = instanceGateway.getCheckedOutMediaInstancesByCustomer(customer);
+        Collection<PhysicalMediaInstance> instances = instancePersister.getCheckedOutMediaInstancesByCustomer(customer);
 
         return instances.stream().map(instance -> new CheckoutInfo(
                 new MediaInfo(
@@ -43,7 +43,7 @@ public class CheckoutLister {
                 ),
                 instance.getUid(),
                 instance.getLocation().toString(),
-                instanceGateway.getCheckoutTime(instance).orElseThrow()
+                instancePersister.getCheckoutTime(instance).orElseThrow()
 
         )).collect(Collectors.toList());
     }

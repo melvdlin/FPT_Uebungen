@@ -1,12 +1,19 @@
 package org.somevand.fpt.teaching.libraryproject.entities;
 
+import org.somevand.fpt.teaching.libraryproject.DOI;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Article extends Media {
     private final DOI doi;
 
-    public Article(int uid, String title, List<Author> authors, LocalDateTime released, DOI doi) {
+    public Article(
+            int uid,
+            String title,
+            List<Author> authors,
+            LocalDateTime released,
+            DOI doi) {
         super(uid, title, authors, released);
         this.doi = doi;
     }
@@ -18,7 +25,7 @@ public class Article extends Media {
     @Override
     public String toString() {
         return "Article{" +
-                "doi=" + doi +
-                "} " + super.toString();
+               "doi=" + doi +
+               "} " + super.toString();
     }
 }
