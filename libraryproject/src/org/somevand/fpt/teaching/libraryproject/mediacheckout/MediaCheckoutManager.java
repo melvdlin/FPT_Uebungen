@@ -10,13 +10,16 @@ import java.util.Objects;
 public class MediaCheckoutManager {
 
     private CustomerPersistenceGateway customerPersister;
+    private InventoryPersistenceGateway inventoryPersister;
     private CheckoutPersistenceGateway checkoutPersister;
 
     public MediaCheckoutManager(
             CustomerPersistenceGateway customerPersister,
+            InventoryPersistenceGateway inventoryPersister,
             CheckoutPersistenceGateway checkoutPersister
     ) {
         this.customerPersister = Objects.requireNonNull(customerPersister);
+        this.inventoryPersister = Objects.requireNonNull(inventoryPersister);
         this.checkoutPersister = Objects.requireNonNull(checkoutPersister);
     }
 
@@ -24,7 +27,7 @@ public class MediaCheckoutManager {
             Collection<InstanceInfo> instancesToCheckout,
             CustomerInfo customerInfo
     ) throws NoSuchCustomerException, NoSuchInstanceException,
-             InstanceAlreadyCheckedOutException {
+            InstanceAlreadyCheckedOutException {
         Customer customer = customerPersister
                 .getCustomerByUID(customerInfo.uid())
                 .orElseThrow(() -> new NoSuchCustomerException(customerInfo));

@@ -6,8 +6,7 @@ import org.somevand.fpt.teaching.libraryproject.entities.PhysicalMediaInstance;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface CheckoutPersistenceGateway {
-    Optional<PhysicalMediaInstance> getInstanceByUID(int uid);
+public interface CheckoutPersistenceGateway extends InventoryPersistenceGateway {
 
     void checkout(Collection<PhysicalMediaInstance> instance, Customer customer);
 

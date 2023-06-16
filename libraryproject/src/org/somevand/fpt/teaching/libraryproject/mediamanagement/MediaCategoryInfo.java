@@ -1,4 +1,4 @@
 package org.somevand.fpt.teaching.libraryproject.mediamanagement;
 
-public interface MediaCategoryInfo {
+public sealed interface MediaCategoryInfo permits BookCategoryInfo, ArticleCategoryInfo, VideoCategoryInfo {
 }
