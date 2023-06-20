@@ -1,5 +1,7 @@
 package org.somevand.fpt.teaching.libraryproject.entities;
 
+import org.somevand.fpt.teaching.libraryproject.Location;
+
 import java.util.Objects;
 
 public class PhysicalMediaInstance extends MediaInstance {
@@ -17,7 +19,7 @@ public class PhysicalMediaInstance extends MediaInstance {
     @Override
     public String toString() {
         return "PhysicalMediaInstance{" +
-                "location=" + location +
-                "} " + super.toString();
+               "location=" + location +
+               "} " + super.toString();
     }
 }

@@ -11,13 +11,16 @@ public class CustomerManager {
         this.customerPersister = Objects.requireNonNull(customerPersister);
     }
 
-    public void createCustomerAccount(CustomerCreationInfo creationInfo) {
+    public int createCustomerAccount(CustomerCreationInfo creationInfo) {
         int newUID = customerPersister.getNewUID();
         Customer newCustomer = new Customer(newUID);
         customerPersister.addCustomer(newCustomer);
+
+        return newUID;
     }
 
-    public void deleteCustomerAccount(CustomerDeletionInfo deletionInfo) throws NoSuchCustomerException {
+    public void deleteCustomerAccount(CustomerDeletionInfo deletionInfo)
+            throws NoSuchCustomerException {
         Objects.requireNonNull(deletionInfo);
 
         Customer toRemove = customerPersister

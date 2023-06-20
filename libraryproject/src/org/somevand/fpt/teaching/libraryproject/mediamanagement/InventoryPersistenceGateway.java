@@ -1,7 +1,6 @@
 package org.somevand.fpt.teaching.libraryproject.mediamanagement;
 
-import org.somevand.fpt.teaching.libraryproject.entities.Author;
-import org.somevand.fpt.teaching.libraryproject.entities.Media;
+import org.somevand.fpt.teaching.libraryproject.entities.*;
 
 import java.util.Optional;
 
@@ -12,7 +11,23 @@ public interface InventoryPersistenceGateway {
 
     int getNewAuthorUid();
 
+    Optional<Media> getMediaByUid(int uid);
+
     Optional<Author> getAuthorByUid(int uid);
 
+    Optional<MediaInstance> getInstanceByUid(int uid);
+
     void addMedia(Media media);
+
+    void addAuthor(Author author);
+
+    void addDigitalInstance(DigitalMediaInstance instance);
+
+    void addPhysicalInstance(PhysicalMediaInstance instance);
+
+    void removeMedia(Media media);
+
+    void removeAuthor(Author author);
+
+    void removeInstance(MediaInstance instance);
 }
