@@ -27,7 +27,7 @@ public class Main {
         for (int i = 0; i < producerCount; i++) {
             producers.add(new Thread(new InterruptibleProducer(
                     cars,
-                    "model"+ i,
+                    "model" + i,
                     maxCarCount,
                     lock,
                     notEmpty,
@@ -43,8 +43,8 @@ public class Main {
             )));
         }
 
-        producers.forEach(Thread::start);
         consumers.forEach(Thread::start);
+        producers.forEach(Thread::start);
 
         Random random = new Random();
         double killChance = 0.3;

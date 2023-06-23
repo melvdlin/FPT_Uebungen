@@ -51,8 +51,8 @@ public class InterruptibleProducer implements Runnable {
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.out.printf("Producer %s is exiting...%n", Thread.currentThread().getName());
             }
         }
+        System.out.printf("Producer %s is exiting...%n", Thread.currentThread().getName());
     }
 }
