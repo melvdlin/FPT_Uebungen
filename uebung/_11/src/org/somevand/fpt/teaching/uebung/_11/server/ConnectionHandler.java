@@ -29,8 +29,12 @@ class ConnectionHandler implements Runnable {
              var in = new ObjectInputStream(socket.getInputStream());
              var out = new ObjectOutputStream(socket.getOutputStream());
              dbConnection) {
+
+            System.out.printf(logFormat, "accepted connection...");
+
             Action action = (Action) in.readObject();
             Response response;
+
             switch (action) {
                 case LOGIN -> {
                     String userName = (String) in.readObject();
