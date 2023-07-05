@@ -4,13 +4,12 @@ import org.somevand.fpt.teaching.libraryproject.entities.Customer;
 import org.somevand.fpt.teaching.libraryproject.entities.PhysicalMediaInstance;
 
 import java.util.Collection;
-import java.util.Optional;
 
-public interface CheckoutPersistenceGateway extends InventoryPersistenceGateway {
+public interface CheckoutPersistenceGateway {
 
-    void checkout(Collection<PhysicalMediaInstance> instance, Customer customer);
+    void checkout(Collection<PhysicalMediaInstance> instances, Customer customer);
 
-    void checkin(Collection<PhysicalMediaInstance> instance);
+    void checkin(Collection<PhysicalMediaInstance> instances);
 
     boolean isCheckedOut(PhysicalMediaInstance instance);
 }

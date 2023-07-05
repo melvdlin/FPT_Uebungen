@@ -36,7 +36,7 @@ public class MediaCheckoutManager {
                 new ArrayList<>(instancesToCheckout.size());
 
         for (InstanceInfo instanceInfo : instancesToCheckout) {
-            PhysicalMediaInstance instance = checkoutPersister
+            PhysicalMediaInstance instance = inventoryPersister
                     .getInstanceByUID(instanceInfo.uid())
                     .orElseThrow(() -> new NoSuchInstanceException(instanceInfo));
             instances.add(instance);
@@ -58,7 +58,7 @@ public class MediaCheckoutManager {
                 new ArrayList<>(instancesToCheckin.size());
 
         for (InstanceInfo instanceInfo : instancesToCheckin) {
-            PhysicalMediaInstance instance = checkoutPersister
+            PhysicalMediaInstance instance = inventoryPersister
                     .getInstanceByUID(instanceInfo.uid())
                     .orElseThrow(() -> new NoSuchInstanceException(instanceInfo));
             instances.add(instance);

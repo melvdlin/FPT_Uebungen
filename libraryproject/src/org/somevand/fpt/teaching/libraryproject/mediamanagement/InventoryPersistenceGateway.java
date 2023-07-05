@@ -7,10 +7,10 @@ import java.util.Optional;
 public interface InventoryPersistenceGateway {
     int getNewMediaUid();
 
-    int getNewInstanceUid();
-
     int getNewAuthorUid();
 
+    int getNewInstanceUid();
+    
     Optional<Media> getMediaByUid(int uid);
 
     Optional<Author> getAuthorByUid(int uid);
