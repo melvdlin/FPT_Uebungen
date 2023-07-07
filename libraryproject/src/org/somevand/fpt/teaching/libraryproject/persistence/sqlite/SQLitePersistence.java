@@ -22,6 +22,20 @@ public class SQLitePersistence implements
         org.somevand.fpt.teaching.libraryproject.mediacheckout.InventoryPersistenceGateway,
         org.somevand.fpt.teaching.libraryproject.mediaquery.InventoryAccessGateway,
         org.somevand.fpt.teaching.libraryproject.mediaquery.InventoryQueryGateway {
+    private static class Labels {
+        private static final String MEDIA_TABLE = "Media";
+        private static final String BOOK_TABLE = "Books";
+        private static final String ARTICLE_TABLE = "Articles";
+        private static final String VIDEO_TABLE = "Videos";
+        private static final String AUTHOR_TABLE = "Authors";
+        private static final String MEDIA_AUTHOR_TABLE = "MediaAuthors";
+        private static final String MEDIA_INSTANCE_TABLE = "MediaInstances";
+        private static final String PHYSICAL_INSTANCE_TABLE = "PhysicalInstances";
+        private static final String DIGITAL_INSTANCE_TABLE = "DigitalInstances";
+        private static final String CUSTOMER_TABLE = "Customers";
+        private static final String CHECKOUT_TABLE = "Checkouts";
+    }
+
     private Connection connection;
 
     public SQLitePersistence(Path dbFile) throws SQLException {

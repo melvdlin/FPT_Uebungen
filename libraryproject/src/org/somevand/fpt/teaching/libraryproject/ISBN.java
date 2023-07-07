@@ -18,8 +18,8 @@ public record ISBN(int EAN, int group, int publisher, int title) {
             throw new IllegalArgumentException("group may have at most 5 digits");
         }
         if (countDigits(EAN) + countDigits(group) + countDigits(publisher) +
-            countDigits(title) != 12) {
-            throw new IllegalArgumentException("ISBN digits before chek digit must add up to 13");
+                countDigits(title) != 12) {
+            throw new IllegalArgumentException("ISBN digits before check digit must add up to 13");
         }
     }
 

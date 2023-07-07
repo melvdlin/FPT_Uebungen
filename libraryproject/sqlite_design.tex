@@ -1,0 +1,173 @@
+%! Author = Melvin
+%! Date = 07/07/2023
+
+% Preamble
+\documentclass[11pt, a4paper]{article}
+
+% Packages
+\usepackage[a4paper, left = 25mm, right = 25mm, top = 25mm, bottom = 25mm]{geometry}
+\usepackage{amsmath}
+\usepackage{mdwtab}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{float}
+\usepackage{parskip}
+
+\lstset{
+    frame = tb,
+    language = SQL,
+    showstringspaces = false,
+    columns = flexible,
+    basicstyle = {\large\ttfamily},
+    numbers = none,
+    numberstyle = \tiny\color{gray},
+    keywordstyle = \color{black},
+    commentstyle = \color{dkgreen},
+    stringstyle = \color{mauve},
+    breaklines = true,
+    breakatwhitespace
+}
+
+\title{SQLite Database Design}
+\date{}
+
+% Document
+\begin{document}
+    \maketitle
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{uid}              & \textbf{title}         & \textbf{released}      \\\hline\hline
+            {\lstinline|INTEGER|}     & {\lstinline|TEXT|}     & {\lstinline|TEXT|}     \\\hline
+            {\lstinline|PRIMARY KEY|} & {\lstinline|NOT NULL|} & {\lstinline|NOT NULL|} \\\hline
+        \end{tabular}
+        \caption{\textit{Media} Table}
+        \label{tab:sqlite_table_Media}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{uid}              & \textbf{firstName}     & \textbf{lastName}      \\\hline\hline
+            {\lstinline|INTEGER|}     & {\lstinline|TEXT|}     & {\lstinline|TEXT|}     \\\hline
+            {\lstinline|PRIMARY KEY|} & {\lstinline|NOT NULL|} & {\lstinline|NOT NULL|} \\\hline
+        \end{tabular}
+        \caption{\textit{Authors} Table}
+        \label{tab:sqlite_table_Authors}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{uid}                & \textbf{authorUID}                    & \textbf{mediaUID}                   \\\hline\hline
+            {\lstinline|INTEGER|}       & {\lstinline|INTEGER|}                 & {\lstinline|INTEGER|}               \\\hline
+            {\lstinline|PRIMARY KEY|}   & {\lstinline|NOT NULL|}                & {\lstinline|NOT NULL|}              \\
+            {\lstinline|AUTOINCREMENT|} & -                                     & -                                   \\
+            -                           & {\lstinline|FOREIGN KEY \|}           & {\lstinline|FOREIGN KEY \|}         \\
+            -                           & {\lstinline|REFERENCES Authors(uid)|} & {\lstinline|REFERENCES Media(uid)|} \\\hline
+
+        \end{tabular}
+        \caption{\textit{MediaAuthors} Table}
+        \label{tab:sqlite_table_MediaAuthors}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{uid}              & \textbf{mediaUID}                   \\\hline\hline
+            {\lstinline|INTEGER|}     & {\lstinline|INTEGER|}               \\\hline
+            {\lstinline|PRIMARY KEY|} & {\lstinline|NOT NULL|}              \\
+            -                         & {\lstinline|FOREIGN KEY \|}         \\
+            -                         & {\lstinline|REFERENCES Media(uid)|} \\\hline
+        \end{tabular}
+        \caption{\textit{MediaInstances} Table}
+        \label{tab:sqlite_table_MediaInstances}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|}
+            \hline
+            \textbf{uid}              \\\hline\hline
+            {\lstinline|INTEGER|}     \\\hline
+            {\lstinline|PRIMARY KEY|} \\\hline
+        \end{tabular}
+        \caption{\textit{Customers} Table}
+        \label{tab:sqlite_table_Customers}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{instanceUID}                         & \textbf{customerUID}                    & \textbf{checkoutTime}  \\\hline\hline
+            {\lstinline|INTEGER|}                        & {\lstinline|INTEGER|}                   & {\lstinline|TEXT|}     \\\hline
+            {\lstinline|PRIMARY KEY|}                    & {\lstinline|NOT NULL|}                  & {\lstinline|NOT NULL|}             \\
+            {\lstinline|FOREIGN KEY \|}                  & {\lstinline|FOREIGN KEY \|}             & -                     \\
+            {\lstinline|REFERENCES MediaInstances(uid)|} & {\lstinline|REFERENCES Customers(uid)|} & -                     \\\hline
+        \end{tabular}
+        \caption{\textit{Checkouts} Table}
+        \label{tab:sqlite_table_Checkouts}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{mediaUID}                   & \textbf{ISBN}                       & \textbf{edition}       \\\hline\hline
+            {\lstinline|INTEGER|}               & {\lstinline|INTEGER|}               & {\lstinline|INTEGER|}  \\\hline
+            {\lstinline|PRIMARY KEY|}           & {\lstinline|NOT NULL|}              & {\lstinline|NOT NULL|} \\
+            {\lstinline|FOREIGN KEY \|}         & {\lstinline|FOREIGN KEY \|}         & -                      \\
+            {\lstinline|REFERENCES Media(uid)|} & {\lstinline|REFERENCES ISBNs(uid)|} & -                      \\\hline
+        \end{tabular}
+        \caption{\textit{Books} Table}
+        \label{tab:sqlite_table_Books}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \textbf{uid}              & \textbf{ean}           & \textbf{group}         & \textbf{publisher}     & \textbf{title}         \\\hline\hline
+            {\lstinline|INTEGER|}     & {\lstinline|INTEGER|}  & {\lstinline|INTEGER|}  & {\lstinline|INTEGER|}  & {\lstinline|INTEGER|}  \\\hline
+            {\lstinline|PRIMARY KEY|} & {\lstinline|NOT NULL|} & {\lstinline|NOT NULL|} & {\lstinline|NOT NULL|} & {\lstinline|NOT NULL|} \\\hline
+        \end{tabular}
+        \caption{\textit{ISBNs} Table}
+        \label{tab:sqlite_table_ISBNs}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{mediaUID}                   & \textbf{DOI}                       \\\hline\hline
+            {\lstinline|INTEGER|}               & {\lstinline|INTEGER|}              \\\hline
+            {\lstinline|PRIMARY KEY|}           & {\lstinline|NOT NULL|}             \\
+            {\lstinline|FOREIGN KEY \|}         & {\lstinline|FOREIGN KEY \|}        \\
+            {\lstinline|REFERENCES Media(uid)|} & {\lstinline|REFERENCES DOIs(uid)|} \\\hline
+        \end{tabular}
+        \caption{\textit{Articles} Table}
+        \label{tab:sqlite_table_Articles}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{uid}                        & \textbf{registrantCode} & \textbf{suffix}        \\\hline\hline
+            {\lstinline|INTEGER|}               & {\lstinline|TEXT|}      & {\lstinline|TEXT|}     \\\hline
+            {\lstinline|PRIMARY KEY|}           & {\lstinline|NOT NULL|}  & {\lstinline|NOT NULL|} \\
+            {\lstinline|FOREIGN KEY \|}         & -                       & -                      \\
+            {\lstinline|REFERENCES Media(uid)|} & -                       & -                      \\\hline
+        \end{tabular}
+        \caption{\textit{DOIs} Table}
+        \label{tab:sqlite_table_DOIs}
+    \end{table}
+
+\end{document}

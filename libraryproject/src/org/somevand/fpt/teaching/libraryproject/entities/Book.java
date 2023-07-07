@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Book extends Media {
     private final ISBN isbn;
-    private final int  edition;
+    private final int edition;
 
     public Book(
             int uid,
@@ -32,8 +32,8 @@ public class Book extends Media {
     @Override
     public String toString() {
         return "Book{" +
-               "isbn=" + isbn +
-               ", edition=" + edition +
-               "} " + super.toString();
+                "isbn=" + isbn +
+                ", edition=" + edition +
+                "} " + super.toString();
     }
 }
